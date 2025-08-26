@@ -140,6 +140,10 @@
             margin: 0 auto;
             padding: 0 var(--spacing-sm);
             width: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
         }
 
         section {
@@ -198,20 +202,29 @@
             align-items: center;
             justify-content: space-between;
             height: var(--header-height);
+            width: 100%;
         }
 
         /* Logo Styles */
         .logo a {
-            font-family: var(--fuente-titulos);
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--color-texto);
+            display: flex;
+            align-items: center;
             text-decoration: none;
-            transition: color var(--transition-fast);
+            transition: all var(--transition-fast);
         }
 
         .logo a:hover {
-            color: var(--color-acento-principal);
+            transform: translateY(-1px);
+        }
+
+        .logo-svg {
+            width: 40px;
+            height: 40px;
+            transition: all var(--transition-fast);
+        }
+
+        .logo a:hover .logo-svg {
+            transform: scale(1.05);
         }
 
         /* Mobile Menu Toggle (Hidden Checkbox) */
@@ -260,7 +273,9 @@
             list-style: none;
             margin: 0;
             padding: 0;
-            gap: var(--spacing-md);
+            width: fit-content;
+            gap: 0;
+            align-self: center;
         }
 
         .nav-item {
@@ -322,6 +337,11 @@
             }
 
             /* Mobile Navigation Styles */
+            .logo-svg {
+                width: 35px;
+                height: 35px;
+            }
+
             .hamburger {
                 display: flex;
             }
@@ -392,7 +412,6 @@
         /* Tablet Navigation Styles */
         @media (min-width: 768px) and (max-width: 1023px) {
             .nav-list {
-                gap: var(--spacing-sm);
             }
 
             .nav-link {
@@ -415,12 +434,12 @@
             }
 
             /* Desktop Navigation Enhancements */
-            .logo a {
-                font-size: 1.75rem;
+            .logo-svg {
+                width: 45px;
+                height: 45px;
             }
 
             .nav-list {
-                gap: var(--spacing-lg);
             }
 
             .nav-link {
@@ -620,6 +639,11 @@
 
         /* Extra small mobile screens */
         @media (max-width: 320px) {
+            .logo-svg {
+                width: 30px;
+                height: 30px;
+            }
+
             .hero-title {
                 font-size: 1.5rem;
             }
@@ -3360,7 +3384,6 @@
         .social-links {
             justify-content: center;
         }
-        }
 
         /* Desktop Footer Styles */
         @media (min-width: 1024px) {
@@ -4331,7 +4354,9 @@
             <div class="header-content">
                 <!-- Logo -->
                 <div class="logo">
-                    <a href="#inicio">La Colmena</a>
+                    <a href="#inicio">
+                        <img src="./assets/logo.svg" alt="La Colmena" class="logo-svg" width="40" height="40">
+                    </a>
                 </div>
 
                 <!-- Mobile Menu Toggle -->
@@ -4349,10 +4374,10 @@
                             <a href="#inicio" class="nav-link">Inicio</a>
                         </li>
                         <li class="nav-item">
-                            <a href="#sobre-el-proyecto" class="nav-link">Sobre el Proyecto</a>
+                            <a href="#sobre-el-proyecto" class="nav-link">Proyecto</a>
                         </li>
                         <li class="nav-item">
-                            <a href="#propuestas" class="nav-link">Nuestras Propuestas</a>
+                            <a href="#propuestas" class="nav-link">Propuestas</a>
                         </li>
                         <li class="nav-item">
                             <a href="#servicios" class="nav-link">Servicios</a>
@@ -4375,7 +4400,8 @@
         <section id="inicio" class="hero">
             <div class="hero-content">
                 <h1 class="hero-title">La Colmena: Tu refugio creativo en la naturaleza</h1>
-                <p class="hero-subtitle" style="color: ;">Un espacio donde la creación escénica y el movimiento se encuentran con la
+                <p class="hero-subtitle" style="color: ;">Un espacio donde la creación escénica y el movimiento se
+                    encuentran con la
                     tranquilidad del entorno natural, ofreciendo un refugio para artistas y creadores que buscan
                     inspiración y conexión.</p>
                 <div class="hero-buttons">
@@ -4633,7 +4659,7 @@
 
                 <!-- Navigation Links Column -->
                 <div class="footer-column footer-nav">
-                    <h3 class="footer-title">Navegación</h3>
+                    <h3 class="footer-title">Navegaci��n</h3>
                     <nav class="footer-navigation">
                         <ul class="footer-nav-list">
                             <li><a href="#inicio" class="footer-nav-link">Inicio</a></li>
