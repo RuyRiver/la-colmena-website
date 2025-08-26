@@ -55,3 +55,4 @@ pids
 
 # Kiro specific (keep steering and specs)
 # .kiro/
+.vercel
