@@ -60,16 +60,160 @@
             --transition-fast: 0.2s ease;
             --transition-smooth: 0.4s ease;
             --transition-slow: 0.6s ease;
+
+            /* Carousel Configuration Variables */
+            --carousel-gap: var(--spacing-md);
+            --carousel-item-width-mobile: 100%;
+            --carousel-item-width-tablet: calc(50% - var(--carousel-gap) / 2);
+            --carousel-item-width-desktop: calc(50% - var(--carousel-gap) / 2);
+
+            /* Navigation Controls */
+            --carousel-nav-size: 44px;
+            --carousel-nav-color: var(--color-acento-principal);
+            --carousel-nav-bg: rgba(255, 255, 255, 0.95);
+            --carousel-nav-hover-bg: var(--color-acento-principal);
+            --carousel-nav-hover-color: var(--color-blanco);
+            --carousel-nav-border: var(--color-acento-secundario);
+
+            /* Indicators */
+            --carousel-indicator-size: 12px;
+            --carousel-indicator-color: var(--color-acento-principal);
+            --carousel-indicator-inactive: rgba(212, 160, 23, 0.3);
+
+            /* Carousel Transitions */
+            --carousel-transition: var(--transition-smooth);
         }
 
-        /* Tablet and Desktop spacing adjustments */
-        @media (min-width: 768px) {
+        /* Tablet spacing adjustments */
+        @media (min-width: 768px) and (max-width: 1023px) {
+            :root {
+                --spacing-md: 1.75rem;
+                --spacing-lg: 2.5rem;
+                --spacing-xl: 3.5rem;
+                --spacing-xxl: 4.5rem;
+                --header-height: 80px;
+
+                /* Tablet Carousel Configuration */
+                --carousel-items-visible: 2;
+                --carousel-item-width: var(--carousel-item-width-tablet);
+                --carousel-nav-display: block;
+                --carousel-gap: var(--spacing-md);
+
+                /* Tablet-specific navigation sizing */
+                --carousel-nav-size: 48px;
+                --carousel-indicator-size: 14px;
+            }
+        }
+
+        /* Desktop spacing adjustments */
+        @media (min-width: 1024px) {
             :root {
                 --spacing-md: 2rem;
                 --spacing-lg: 3rem;
                 --spacing-xl: 4rem;
                 --spacing-xxl: 5rem;
                 --header-height: 80px;
+
+                /* Desktop Carousel Configuration */
+                --carousel-items-visible: 2;
+                --carousel-item-width: var(--carousel-item-width-desktop);
+                --carousel-nav-display: block;
+            }
+        }
+
+        /* Mobile Configuration */
+        @media (max-width: 767px) {
+            :root {
+                --carousel-items-visible: 1;
+                --carousel-item-width: var(--carousel-item-width-mobile);
+                --carousel-nav-display: none;
+                /* Solo navegación táctil */
+            }
+
+            /* Explicitly hide navigation controls on mobile */
+            .carousel-nav {
+                display: none !important;
+                visibility: hidden;
+                opacity: 0;
+                pointer-events: none;
+            }
+
+            /* Ensure mobile uses only touch navigation */
+            .carousel-container {
+                touch-action: pan-x;
+            }
+        }
+
+        /* Desktop Configuration */
+        @media (min-width: 1024px) {
+            :root {
+                --carousel-items-visible: 2;
+                --carousel-item-width: var(--carousel-item-width-desktop);
+                --carousel-nav-display: block;
+
+                /* Desktop-specific enhancements */
+                --carousel-nav-size: 52px;
+                --carousel-indicator-size: 16px;
+                --carousel-gap: var(--spacing-lg);
+            }
+        }
+
+        /* Large Desktop Configuration (≥1440px) */
+        @media (min-width: 1440px) {
+            :root {
+                --carousel-nav-size: 56px;
+                --carousel-indicator-size: 18px;
+                --carousel-gap: var(--spacing-xl);
+            }
+        }
+
+        /* Tablet Indicator Styles */
+        @media (min-width: 768px) and (max-width: 1023px) {
+            .carousel-indicators {
+                margin-top: var(--spacing-lg);
+                padding: var(--spacing-sm) 0;
+            }
+
+            .indicator {
+                width: 14px;
+                height: 14px;
+                margin: 0 var(--spacing-xs);
+            }
+
+            .indicator::before {
+                width: 14px;
+                height: 14px;
+            }
+
+            /* Enhanced tablet indicator hover states */
+            .indicator:hover::before {
+                background: var(--carousel-indicator-color);
+                transform: translate(-50%, -50%) scale(1.3);
+            }
+
+            /* Tablet-specific active indicator styling */
+            #proposals-slide-1:checked~.carousel-indicators label[for="proposals-slide-1"]::before,
+            #proposals-slide-2:checked~.carousel-indicators label[for="proposals-slide-2"]::before {
+                background: var(--carousel-indicator-color);
+                transform: translate(-50%, -50%) scale(1.3);
+                box-shadow: 0 2px 8px rgba(212, 160, 23, 0.3);
+            }
+        }
+
+        /* Desktop Indicator Styles */
+        @media (min-width: 1024px) {
+            .carousel-indicators {
+                margin-top: var(--spacing-lg);
+            }
+
+            .indicator {
+                width: 16px;
+                height: 16px;
+            }
+
+            .indicator::before {
+                width: 16px;
+                height: 16px;
             }
         }
 
@@ -177,6 +321,1222 @@
             .container {
                 padding: 0 var(--spacing-lg);
             }
+        }
+
+        /* ========================================
+           CAROUSEL BASE STYLES
+           ======================================== */
+
+        /* Carousel Container Component */
+        .carousel-container {
+            position: relative;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        /* Carousel Track Component */
+        .carousel-track {
+            display: flex;
+            scroll-behavior: smooth;
+            scroll-snap-type: x mandatory;
+            overflow-x: auto;
+            scrollbar-width: none;
+            /* Firefox */
+            -ms-overflow-style: none;
+            /* IE/Edge */
+            gap: var(--carousel-gap);
+        }
+
+        /* Hide scrollbars for WebKit browsers */
+        .carousel-track::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* Carousel Item Component */
+        .carousel-item {
+            flex: 0 0 auto;
+            scroll-snap-align: start;
+            width: var(--carousel-item-width);
+        }
+
+        /* Navigation Controls Component */
+        .carousel-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 15;
+            /* Higher z-index to ensure visibility over cards */
+            display: var(--carousel-nav-display, none);
+            opacity: 0.8;
+            transition: opacity var(--carousel-transition), transform var(--carousel-transition);
+        }
+
+        .carousel-nav-prev {
+            left: var(--spacing-sm);
+        }
+
+        .carousel-nav-next {
+            right: var(--spacing-sm);
+        }
+
+        /* Show navigation controls on carousel hover */
+        .carousel-container:hover .carousel-nav {
+            opacity: 1;
+        }
+
+        /* Ensure navigation doesn't interfere with card interactions */
+        .carousel-nav {
+            pointer-events: auto;
+        }
+
+        .carousel-nav .nav-button {
+            pointer-events: auto;
+        }
+
+        .nav-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: var(--carousel-nav-size);
+            height: var(--carousel-nav-size);
+            background: var(--carousel-nav-bg);
+            border: 2px solid var(--carousel-nav-color);
+            border-radius: 50%;
+            color: var(--carousel-nav-color);
+            font-size: 1.5rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all var(--carousel-transition);
+            box-shadow: var(--shadow-sm);
+            min-height: var(--touch-target-min);
+            min-width: var(--touch-target-min);
+            user-select: none;
+            /* Ensure proper text alignment */
+            line-height: 1;
+            text-align: center;
+        }
+
+        .nav-button:hover {
+            background: var(--carousel-nav-color);
+            color: var(--color-blanco);
+            transform: scale(1.1);
+            box-shadow: var(--shadow-md);
+        }
+
+        .nav-button:active {
+            transform: scale(0.95);
+            transition: transform 0.1s ease;
+        }
+
+        /* Focus states for keyboard navigation */
+        .nav-button:focus {
+            outline: 3px solid var(--color-acento-principal);
+            outline-offset: 3px;
+            box-shadow: var(--shadow-md), 0 0 0 3px rgba(241, 196, 78, 0.3);
+        }
+
+        /* Disabled state styling */
+        .carousel-nav[style*="opacity: 0.3"] .nav-button {
+            cursor: not-allowed;
+            background: rgba(255, 255, 255, 0.5);
+            border-color: rgba(212, 160, 23, 0.3);
+            color: rgba(212, 160, 23, 0.3);
+        }
+
+        /* High contrast mode support */
+        @media (prefers-contrast: high) {
+            .nav-button {
+                border-width: 3px;
+                font-weight: 900;
+            }
+
+            .nav-button:focus {
+                outline-width: 4px;
+                outline-offset: 4px;
+            }
+        }
+
+        /* Reduced motion support */
+        @media (prefers-reduced-motion: reduce) {
+            .nav-button {
+                transition: none;
+            }
+
+            .nav-button:hover {
+                transform: none;
+            }
+
+            .carousel-nav {
+                transition: none;
+            }
+        }
+
+        /* Indicators Component */
+        .carousel-indicators {
+            display: flex;
+            justify-content: center;
+            gap: var(--spacing-xs);
+            margin-top: var(--spacing-md);
+            padding: var(--spacing-xs) 0;
+        }
+
+        .carousel-control {
+            display: none;
+            /* Hidden radio buttons */
+        }
+
+        .indicator {
+            display: block;
+            width: var(--carousel-indicator-size);
+            height: var(--carousel-indicator-size);
+            border-radius: 50%;
+            background: var(--carousel-indicator-inactive);
+            cursor: pointer;
+            transition: all var(--carousel-transition);
+            border: 2px solid transparent;
+            min-height: var(--touch-target-min);
+            min-width: var(--touch-target-min);
+            position: relative;
+        }
+
+        .indicator::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: var(--carousel-indicator-size);
+            height: var(--carousel-indicator-size);
+            border-radius: 50%;
+            background: var(--carousel-indicator-inactive);
+            transition: all var(--carousel-transition);
+        }
+
+        .indicator:hover::before {
+            background: var(--carousel-indicator-color);
+            transform: translate(-50%, -50%) scale(1.2);
+        }
+
+        /* Indicator Active States - Connected to Radio Buttons */
+        #proposals-slide-1:checked~.carousel-indicators label[for="proposals-slide-1"]::before,
+        #proposals-slide-2:checked~.carousel-indicators label[for="proposals-slide-2"]::before {
+            background: var(--carousel-indicator-color);
+            transform: translate(-50%, -50%) scale(1.2);
+        }
+
+        /* Ensure indicators are clickable and provide visual feedback */
+        .indicator {
+            cursor: pointer;
+            transition: all var(--carousel-transition);
+        }
+
+        .indicator:active::before {
+            transform: translate(-50%, -50%) scale(0.9);
+        }
+
+        /* Responsive Carousel Configurations */
+        @media (max-width: 767px) {
+            .carousel-item {
+                width: var(--carousel-item-width-mobile);
+                min-width: 100%;
+                /* Ensure full width for single card view */
+            }
+
+            .carousel-nav {
+                display: none;
+                /* Solo navegación táctil en mobile */
+            }
+
+            /* Mobile-specific scroll snap configuration */
+            .carousel-track {
+                scroll-snap-type: x mandatory;
+                -webkit-overflow-scrolling: touch;
+                /* Smooth scrolling on iOS */
+                scroll-behavior: smooth;
+                overflow-x: scroll;
+                overflow-y: hidden;
+                /* Hide scrollbars while maintaining functionality */
+                scrollbar-width: none;
+                /* Firefox */
+                -ms-overflow-style: none;
+                /* IE/Edge */
+            }
+
+            .carousel-track::-webkit-scrollbar {
+                display: none;
+                /* WebKit browsers */
+            }
+
+            .carousel-item {
+                scroll-snap-align: start;
+                scroll-snap-stop: always;
+                /* Force stop at each item */
+            }
+        }
+
+        @media (min-width: 768px) and (max-width: 1023px) {
+            .carousel-item {
+                width: var(--carousel-item-width-tablet);
+            }
+
+            /* Tablet-specific carousel container */
+            .carousel-container {
+                position: relative;
+                width: 100%;
+                overflow: hidden;
+                /* Ensure container can handle 2-card layout */
+            }
+
+            /* Tablet navigation controls positioning - Improved */
+            .carousel-nav {
+                display: var(--carousel-nav-display, block);
+                position: absolute;
+                top: 50%;
+                transform: translateY(-50%);
+                z-index: 15;
+                /* Higher z-index for better layering */
+                opacity: 0.9;
+                transition: opacity var(--carousel-transition), transform var(--carousel-transition);
+            }
+
+            .carousel-nav-prev {
+                left: calc(var(--spacing-md) * -1);
+                /* Moved further from cards */
+            }
+
+            .carousel-nav-next {
+                right: calc(var(--spacing-md) * -1);
+                /* Moved further from cards */
+            }
+
+            /* Show navigation on carousel hover */
+            .carousel-container:hover .carousel-nav {
+                opacity: 1;
+                transform: translateY(-50%) scale(1.05);
+            }
+
+            /* Tablet navigation button styling */
+            .nav-button {
+                width: calc(var(--carousel-nav-size) + 4px);
+                height: calc(var(--carousel-nav-size) + 4px);
+                font-size: 1.6rem;
+                box-shadow: var(--shadow-md);
+                /* Ensure proper touch targets for tablets */
+                min-width: var(--touch-target-min);
+                min-height: var(--touch-target-min);
+                touch-action: manipulation;
+                /* Optimize for touch */
+                backdrop-filter: blur(4px);
+                -webkit-backdrop-filter: blur(4px);
+            }
+
+            .nav-button:hover {
+                transform: scale(1.15);
+                box-shadow: var(--shadow-lg);
+                background: var(--carousel-nav-color);
+                color: var(--color-blanco);
+            }
+
+            /* Tablet-specific touch feedback */
+            .nav-button:active {
+                transform: scale(1.05);
+                transition: transform 0.1s ease;
+            }
+
+            /* Enhanced tablet navigation visibility */
+            .carousel-nav {
+                background: rgba(255, 255, 255, 0.1);
+                border-radius: 50%;
+                padding: var(--spacing-xs);
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .carousel-item {
+                width: var(--carousel-item-width-desktop);
+            }
+
+            /* Desktop-specific navigation controls - Improved positioning */
+            .carousel-nav {
+                display: var(--carousel-nav-display, block);
+                position: absolute;
+                top: 50%;
+                transform: translateY(-50%);
+                z-index: 15;
+                /* Higher z-index for better layering */
+                opacity: 0.8;
+                transition: opacity var(--carousel-transition), transform var(--carousel-transition);
+            }
+
+            .carousel-nav-prev {
+                left: calc(var(--spacing-lg) * -1.2);
+                /* Moved further from cards */
+            }
+
+            .carousel-nav-next {
+                right: calc(var(--spacing-lg) * -1.2);
+                /* Moved further from cards */
+            }
+
+            /* Enhanced desktop navigation visibility on hover */
+            .carousel-container:hover .carousel-nav {
+                opacity: 1;
+                transform: translateY(-50%) scale(1.02);
+            }
+
+            /* Desktop navigation button styling */
+            .nav-button {
+                width: calc(var(--carousel-nav-size) + 8px);
+                height: calc(var(--carousel-nav-size) + 8px);
+                font-size: 1.8rem;
+                box-shadow: var(--shadow-md);
+                /* Enhanced desktop interaction */
+                cursor: pointer;
+                user-select: none;
+                transition: all var(--carousel-transition);
+                backdrop-filter: blur(6px);
+                -webkit-backdrop-filter: blur(6px);
+                /* Subtle gradient background */
+                background: linear-gradient(135deg, var(--carousel-nav-bg) 0%, rgba(255, 255, 255, 0.95) 100%);
+            }
+
+            .nav-button:hover {
+                transform: scale(1.2);
+                box-shadow: var(--shadow-lg);
+                background: linear-gradient(135deg, var(--carousel-nav-color) 0%, var(--color-acento-secundario) 100%);
+                color: var(--color-blanco);
+                border-color: var(--color-acento-secundario);
+            }
+
+            .nav-button:active {
+                transform: scale(1.1);
+                transition: transform 0.1s ease;
+            }
+
+            /* Desktop-specific focus states for keyboard navigation */
+            .nav-button:focus {
+                outline: 3px solid var(--color-acento-principal);
+                outline-offset: 3px;
+                box-shadow: var(--shadow-lg), 0 0 0 3px rgba(241, 196, 78, 0.3);
+            }
+
+            /* Enhanced desktop navigation container */
+            .carousel-nav {
+                background: rgba(255, 255, 255, 0.05);
+                border-radius: 50%;
+                padding: var(--spacing-xs);
+                backdrop-filter: blur(2px);
+                -webkit-backdrop-filter: blur(2px);
+            }
+
+            /* Enhanced desktop indicator styling */
+            .carousel-indicators {
+                margin-top: var(--spacing-xl);
+                padding: var(--spacing-md) 0;
+            }
+
+            .indicator {
+                width: 16px;
+                height: 16px;
+                margin: 0 var(--spacing-sm);
+                cursor: pointer;
+                transition: all var(--carousel-transition);
+            }
+
+            .indicator::before {
+                width: 16px;
+                height: 16px;
+                transition: all var(--carousel-transition);
+            }
+
+            .indicator:hover::before {
+                background: var(--carousel-indicator-color);
+                transform: translate(-50%, -50%) scale(1.4);
+                box-shadow: 0 3px 12px rgba(212, 160, 23, 0.4);
+            }
+
+            /* Enhanced active indicator styling for desktop */
+            #proposals-slide-1:checked~.carousel-indicators label[for="proposals-slide-1"]::before,
+            #proposals-slide-2:checked~.carousel-indicators label[for="proposals-slide-2"]::before {
+                background: var(--carousel-indicator-color);
+                transform: translate(-50%, -50%) scale(1.4);
+                box-shadow: 0 4px 16px rgba(212, 160, 23, 0.5);
+            }
+
+            /* Desktop-specific hover effects for enhanced UX */
+            .carousel-container:hover .carousel-nav {
+                opacity: 1;
+                transform: translateY(-50%) scale(1.02);
+            }
+
+            .carousel-container .carousel-nav {
+                opacity: 0.8;
+                transition: opacity var(--carousel-transition), transform var(--carousel-transition);
+            }
+
+            /* Desktop-specific card hover effects within carousel - Improved */
+            .carousel-item .proposal-card {
+                transition: transform var(--carousel-transition), box-shadow var(--carousel-transition);
+            }
+
+            /* Only apply hover effects when not hovering over navigation */
+            .carousel-container:not(:hover) .carousel-item:hover .proposal-card,
+            .carousel-container:hover .carousel-item:hover .proposal-card:not(.nav-button-hover) {
+                transform: translateY(-2px);
+                box-shadow: var(--shadow-lg);
+            }
+
+            /* Prevent card hover when navigation is being used */
+            .carousel-nav:hover~.carousel-track .proposal-card {
+                transform: none;
+            }
+        }
+
+        /* Extra Large Desktop Optimizations (≥1440px) */
+        @media (min-width: 1440px) {
+            .carousel-nav-prev {
+                left: calc(var(--spacing-xl) * -1.2);
+                /* Consistent with desktop positioning */
+            }
+
+            .carousel-nav-next {
+                right: calc(var(--spacing-xl) * -1.2);
+                /* Consistent with desktop positioning */
+            }
+
+            .nav-button {
+                width: calc(var(--carousel-nav-size) + 12px);
+                height: calc(var(--carousel-nav-size) + 12px);
+                font-size: 2rem;
+                box-shadow: var(--shadow-lg);
+            }
+
+            .nav-button:hover {
+                transform: scale(1.25);
+                box-shadow: var(--shadow-xl);
+            }
+
+            .carousel-indicators {
+                margin-top: calc(var(--spacing-xl) + var(--spacing-md));
+            }
+
+            .indicator {
+                width: 18px;
+                height: 18px;
+                margin: 0 var(--spacing-md);
+            }
+
+            .indicator::before {
+                width: 18px;
+                height: 18px;
+            }
+
+            /* Enhanced large desktop navigation container */
+            .carousel-nav {
+                background: rgba(255, 255, 255, 0.08);
+                border-radius: 50%;
+                padding: calc(var(--spacing-xs) + 2px);
+            }
+        }
+
+        /* Carousel Navigation Logic with Radio Buttons */
+
+        /* Navigation Button State Management */
+        .carousel-nav {
+            opacity: 1;
+            pointer-events: auto;
+            transition: opacity var(--carousel-transition);
+        }
+
+        /* Hide previous button when on first slide */
+        #proposals-slide-1:checked~.carousel-nav-prev {
+            opacity: 0.3;
+            pointer-events: none;
+        }
+
+        /* Hide next button when on last slide */
+        #proposals-slide-2:checked~.carousel-nav-next {
+            opacity: 0.3;
+            pointer-events: none;
+        }
+
+        /* Show all navigation when hovering over carousel */
+        .carousel-container:hover .carousel-nav {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        /* Tablet Navigation Logic (768px - 1023px) - Simplified Approach */
+        @media (min-width: 768px) and (max-width: 1023px) {
+            .carousel-track {
+                display: flex;
+                overflow-x: auto;
+                scroll-snap-type: x mandatory;
+                scroll-behavior: smooth;
+                gap: var(--carousel-gap);
+                padding: 0 var(--spacing-sm);
+                scroll-padding-left: var(--spacing-sm);
+                /* Hide scrollbars while maintaining functionality */
+                scrollbar-width: none;
+                -ms-overflow-style: none;
+            }
+
+            .carousel-track::-webkit-scrollbar {
+                display: none;
+            }
+
+            .carousel-item {
+                flex: 0 0 calc(50% - var(--carousel-gap) / 2);
+                scroll-snap-align: start;
+                scroll-snap-stop: always;
+                min-width: calc(50% - var(--carousel-gap) / 2);
+            }
+
+            /* Navigation control for tablet - scroll to specific positions */
+            #proposals-slide-1:checked~.carousel-track {
+                scroll-behavior: smooth;
+            }
+
+            #proposals-slide-2:checked~.carousel-track {
+                scroll-behavior: smooth;
+            }
+
+            /* Ensure proper card alignment */
+            .carousel-item:nth-child(1),
+            .carousel-item:nth-child(2) {
+                /* First page: cards 1 and 2 */
+            }
+
+            .carousel-item:nth-child(3),
+            .carousel-item:nth-child(4) {
+                /* Second page: cards 3 and 4 */
+            }
+
+            re there are only 3 cards */ .carousel-item:nth-child(3):last-child {
+                width: calc(25% - var(--carousel-gap) * 3 / 4);
+                margin-left: 0;
+                margin-right: auto;
+            }
+        }
+
+        /* Desktop Navigation Logic (≥1024px) - Optimized for single navigation */
+        @media (min-width: 1024px) {
+
+            /* When first slide is selected - show first 2 cards (cards 1-2) */
+            #proposals-slide-1:checked~.carousel-track {
+                transform: translateX(0);
+            }
+
+            /* When second slide is selected - show last 2 cards (cards 3-4) */
+            #proposals-slide-2:checked~.carousel-track {
+                transform: translateX(calc(-50% - var(--carousel-gap) / 2));
+            }
+
+            .carousel-track {
+                transition: transform var(--carousel-transition);
+                width: 200%;
+                /* Accommodate all 4 cards in 2 slides */
+                display: flex;
+                flex-wrap: nowrap;
+                overflow: hidden;
+                /* Ensure smooth hardware acceleration */
+                will-change: transform;
+                backface-visibility: hidden;
+            }
+
+            .carousel-item {
+                width: calc(25% - var(--carousel-gap) * 3 / 4);
+                /* 4 cards total, 2 visible at once */
+                flex-shrink: 0;
+                min-width: calc(25% - var(--carousel-gap) * 3 / 4);
+                /* Optimize for smooth transitions */
+                will-change: transform;
+                backface-visibility: hidden;
+            }
+
+            /* Ensure proper spacing between cards */
+            .carousel-item:not(:last-child) {
+                margin-right: var(--carousel-gap);
+            }
+
+            /* Desktop-specific carousel container optimizations */
+            .carousel-container {
+                /* Ensure proper containment for 2-card layout */
+                position: relative;
+                width: 100%;
+                overflow: hidden;
+                /* Optimize rendering performance */
+                contain: layout style paint;
+            }
+
+            /* Enhanced desktop navigation arrows positioning */
+            .carousel-nav-prev {
+                left: calc(var(--spacing-lg) * -1);
+                /* Ensure arrows don't interfere with content */
+            }
+
+            .carousel-nav-next {
+                right: calc(var(--spacing-lg) * -1);
+                /* Ensure arrows don't interfere with content */
+            }
+
+            /* Desktop keyboard navigation support */
+            .carousel-control:focus+* .nav-button {
+                outline: 3px solid var(--color-acento-principal);
+                outline-offset: 3px;
+            }
+
+            /* Ensure optimal performance on desktop */
+            .carousel-track,
+            .carousel-item {
+                transform: translateZ(0);
+                /* Force hardware acceleration */
+            }
+
+            /* Handle edge cases for desktop */
+            .carousel-item:nth-child(3):last-child {
+                /* If there are only 3 cards, ensure proper alignment */
+                width: calc(25% - var(--carousel-gap) * 3 / 4);
+                margin-left: 0;
+                margin-right: auto;
+            }
+
+            /* Ensure proper alignment for exactly 4 cards */
+            .carousel-item:nth-child(1),
+            .carousel-item:nth-child(2) {
+                /* First slide: cards 1 and 2 */
+            }
+
+            .carousel-item:nth-child(3),
+            .carousel-item:nth-child(4) {
+                /* Second slide: cards 3 and 4 */
+            }
+
+            /* Desktop-specific accessibility enhancements */
+            .nav-button[aria-label] {
+                /* Ensure screen readers can properly announce navigation */
+                position: relative;
+            }
+
+            .indicator[aria-label] {
+                /* Ensure screen readers can properly announce indicators */
+                position: relative;
+            }
+        }
+
+        /* Mobile Scroll Snap Logic with Radio Buttons */
+        @media (max-width: 767px) {
+
+            /* When first slide is selected */
+            #proposals-slide-1:checked~.carousel-track {
+                scroll-snap-type: x mandatory;
+            }
+
+            /* When second slide is selected */
+            #proposals-slide-2:checked~.carousel-track {
+                scroll-snap-type: x mandatory;
+            }
+
+            /* Ensure proper scroll positioning */
+            .carousel-track {
+                scroll-padding-left: var(--spacing-sm);
+            }
+        }
+
+        /* Smooth Breakpoint Transitions */
+        .carousel-container,
+        .carousel-track,
+        .carousel-item {
+            transition: all var(--carousel-transition);
+        }
+
+        /* Enhanced smooth transitions when resizing between breakpoints */
+        @media (min-width: 767px) and (max-width: 769px) {
+            .carousel-track {
+                transition: transform var(--carousel-transition), width var(--carousel-transition);
+            }
+
+            .carousel-item {
+                transition: width var(--carousel-transition), margin var(--carousel-transition);
+            }
+
+            .carousel-nav {
+                transition: opacity var(--carousel-transition), transform var(--carousel-transition);
+            }
+        }
+
+        @media (min-width: 1023px) and (max-width: 1025px) {
+            .carousel-track {
+                transition: transform var(--carousel-transition), width var(--carousel-transition);
+            }
+
+            .carousel-item {
+                transition: width var(--carousel-transition), margin var(--carousel-transition);
+            }
+
+            .carousel-nav {
+                transition: opacity var(--carousel-transition), transform var(--carousel-transition);
+            }
+
+            .carousel-indicators {
+                transition: margin var(--carousel-transition);
+            }
+
+            .indicator {
+                transition: all var(--carousel-transition);
+            }
+        }
+
+        /* Desktop-specific smooth transitions for window resizing */
+        @media (min-width: 1024px) {
+            .carousel-container {
+                transition: all var(--carousel-transition);
+            }
+
+            .carousel-track {
+                transition: transform var(--carousel-transition), width var(--carousel-transition);
+            }
+
+            .carousel-item {
+                transition: width var(--carousel-transition), margin var(--carousel-transition), transform var(--carousel-transition);
+            }
+
+            .carousel-nav {
+                transition: opacity var(--carousel-transition), transform var(--carousel-transition), left var(--carousel-transition), right var(--carousel-transition);
+            }
+
+            .nav-button {
+                transition: all var(--carousel-transition);
+            }
+
+            .carousel-indicators {
+                transition: margin var(--carousel-transition), padding var(--carousel-transition);
+            }
+
+            .indicator {
+                transition: all var(--carousel-transition);
+            }
+        }
+
+        /* Accessibility Enhancements */
+        @media (prefers-reduced-motion: reduce) {
+            .carousel-track {
+                scroll-behavior: auto;
+            }
+
+            .carousel-item,
+            .nav-button,
+            .indicator,
+            .carousel-container,
+            .carousel-track {
+                transition: none;
+            }
+        }
+
+        @media (prefers-contrast: high) {
+            .nav-button {
+                border-width: 3px;
+            }
+
+            .indicator {
+                border: 2px solid currentColor;
+            }
+        }
+
+        /* Focus States for Accessibility */
+        .indicator:focus {
+            outline: 2px solid var(--color-acento-principal);
+            outline-offset: 2px;
+        }
+
+        .indicator:focus::before {
+            background: var(--carousel-indicator-color);
+            transform: translate(-50%, -50%) scale(1.3);
+        }
+
+        /* Keyboard Navigation Support */
+        .carousel-control:focus+* .indicator {
+            outline: 2px solid var(--color-acento-principal);
+            outline-offset: 2px;
+        }
+
+        /* ========================================
+           CAROUSEL ACCESSIBILITY ENHANCEMENTS
+           ======================================== */
+
+        /* Screen Reader Only Content */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+
+        /* Focus Management for Keyboard Navigation */
+        .carousel-control:focus {
+            outline: 3px solid var(--color-acento-principal);
+            outline-offset: 3px;
+            z-index: 20;
+        }
+
+        /* Enhanced Focus Styles for Navigation Controls */
+        .nav-button:focus,
+        .nav-button:focus-visible {
+            outline: 4px solid var(--color-acento-principal);
+            outline-offset: 4px;
+            box-shadow: var(--shadow-lg), 0 0 0 4px rgba(241, 196, 78, 0.4);
+            z-index: 25;
+            background: var(--color-acento-principal);
+            color: var(--color-blanco);
+            transform: scale(1.1);
+        }
+
+        /* Enhanced Focus Styles for Indicators */
+        .indicator:focus,
+        .indicator:focus-visible {
+            outline: 4px solid var(--color-acento-principal);
+            outline-offset: 4px;
+            box-shadow: 0 0 0 4px rgba(241, 196, 78, 0.4);
+            z-index: 25;
+        }
+
+        .indicator:focus::before,
+        .indicator:focus-visible::before {
+            background: var(--carousel-indicator-color);
+            transform: translate(-50%, -50%) scale(1.3);
+        }
+
+        /* Keyboard Navigation Support */
+        .nav-button[tabindex="0"]:focus,
+        .indicator[tabindex="0"]:focus {
+            outline: 3px solid var(--color-acento-principal);
+            outline-offset: 3px;
+        }
+
+        /* Active State Management for ARIA */
+        #proposals-slide-1:checked~.carousel-indicators .indicator[data-slide="1"] {
+            aria-selected: true;
+        }
+
+        #proposals-slide-2:checked~.carousel-indicators .indicator[data-slide="2"] {
+            aria-selected: true;
+        }
+
+        /* Visual Focus Indicators for High Contrast Mode */
+        @media (prefers-contrast: high) {
+
+            .nav-button:focus,
+            .nav-button:focus-visible {
+                outline-width: 4px;
+                outline-offset: 4px;
+                border-width: 3px;
+            }
+
+            .indicator:focus,
+            .indicator:focus-visible {
+                outline-width: 4px;
+                outline-offset: 4px;
+                border: 3px solid currentColor;
+            }
+
+            .nav-button {
+                border-width: 3px;
+                font-weight: 900;
+            }
+
+            .indicator::before {
+                border: 2px solid currentColor;
+            }
+        }
+
+        /* Reduced Motion Accessibility */
+        @media (prefers-reduced-motion: reduce) {
+            .carousel-track {
+                scroll-behavior: auto;
+                transition: none;
+            }
+
+            .carousel-item {
+                transition: none;
+            }
+
+            .nav-button {
+                transition: none;
+            }
+
+            .nav-button:hover {
+                transform: none;
+            }
+
+            .carousel-nav {
+                transition: none;
+            }
+
+            .indicator {
+                transition: none;
+            }
+
+            .indicator::before {
+                transition: none;
+            }
+
+            .indicator:hover::before {
+                transform: translate(-50%, -50%);
+            }
+
+            /* Disable all carousel animations */
+            .carousel-container * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* Touch and Pointer Accessibility */
+        @media (pointer: coarse) {
+
+            /* Enhance touch targets for touch devices */
+            .nav-button {
+                min-width: 48px;
+                min-height: 48px;
+                padding: var(--spacing-sm);
+            }
+
+            .indicator {
+                min-width: 48px;
+                min-height: 48px;
+                padding: var(--spacing-sm);
+            }
+        }
+
+        /* Voice Control and Switch Navigation Support */
+        .carousel-container[aria-live="polite"] {
+            /* Announce changes to screen readers */
+        }
+
+        /* Skip Link for Carousel Navigation */
+        .carousel-skip-link {
+            position: absolute;
+            top: -40px;
+            left: 6px;
+            background: var(--color-acento-principal);
+            color: var(--color-texto);
+            padding: 8px;
+            text-decoration: none;
+            border-radius: var(--border-radius-sm);
+            z-index: 100;
+            transition: top var(--transition-fast);
+        }
+
+        .carousel-skip-link:focus {
+            top: 6px;
+        }
+
+        /* Ensure proper tab order */
+        .carousel-control[tabindex="-1"] {
+            /* Remove from tab order when not active */
+        }
+
+        /* Keyboard Navigation Instructions (Hidden by Default) */
+        .carousel-instructions {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+
+        .carousel-instructions:focus {
+            position: static;
+            width: auto;
+            height: auto;
+            padding: var(--spacing-sm);
+            margin: 0;
+            overflow: visible;
+            clip: auto;
+            white-space: normal;
+            background: var(--color-fondo);
+            border: 2px solid var(--color-acento-principal);
+            border-radius: var(--border-radius-sm);
+            font-size: 0.9rem;
+            color: var(--color-texto);
+        }
+
+        /* Ensure carousel is properly announced to screen readers */
+        .carousel-container[role="region"] {
+            /* Proper landmark for screen readers */
+        }
+
+        /* Enhanced Mobile Accessibility */
+        @media (max-width: 767px) {
+
+            /* Ensure touch navigation is accessible */
+            .carousel-track {
+                /* Improve touch scrolling accessibility */
+                -webkit-overflow-scrolling: touch;
+                scroll-behavior: smooth;
+                touch-action: pan-x;
+                /* Optimize for horizontal scrolling */
+            }
+
+            /* Hide navigation controls from screen readers on mobile */
+            .carousel-nav {
+                aria-hidden: true;
+                display: none !important;
+                /* Ensure complete hiding */
+            }
+
+            /* Ensure indicators are still accessible on mobile */
+            .indicator {
+                min-width: 48px;
+                /* Increased for better touch targets */
+                min-height: 48px;
+                padding: var(--spacing-sm);
+                touch-action: manipulation;
+                /* Optimize touch response */
+            }
+
+            /* Enhanced mobile focus indicators */
+            .indicator:focus {
+                outline: 4px solid var(--color-acento-principal);
+                outline-offset: 4px;
+                transform: scale(1.1);
+            }
+        }
+
+        /* Tablet and Desktop Keyboard Navigation */
+        @media (min-width: 768px) {
+
+            /* Ensure navigation controls are keyboard accessible */
+            .nav-button[role="button"] {
+                cursor: pointer;
+            }
+
+            .nav-button[role="button"]:focus {
+                outline: 3px solid var(--color-acento-principal);
+                outline-offset: 3px;
+            }
+
+            /* Enhanced keyboard navigation for indicators */
+            .indicator[role="tab"] {
+                cursor: pointer;
+            }
+
+            .indicator[role="tab"]:focus {
+                outline: 3px solid var(--color-acento-principal);
+                outline-offset: 3px;
+            }
+        }
+
+        /* Proposal Card Accessibility Enhancements */
+        .proposal-card[role="article"] {
+            /* Ensure cards are focusable and accessible */
+            border: 2px solid transparent;
+            transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+        }
+
+        .proposal-card[role="article"]:focus {
+            outline: 3px solid var(--color-acento-principal);
+            outline-offset: 3px;
+            border-color: var(--color-acento-principal);
+            box-shadow: var(--shadow-md), 0 0 0 3px rgba(241, 196, 78, 0.3);
+        }
+
+        .proposal-card[role="article"]:focus-visible {
+            outline: 3px solid var(--color-acento-principal);
+            outline-offset: 3px;
+            border-color: var(--color-acento-principal);
+            box-shadow: var(--shadow-md), 0 0 0 3px rgba(241, 196, 78, 0.3);
+        }
+
+
+
+        /* Enhanced focus for proposal card CTAs */
+        .proposal-card-cta:focus,
+        .proposal-card-cta:focus-visible {
+            outline: 3px solid var(--color-acento-principal);
+            outline-offset: 3px;
+            box-shadow: 0 0 0 3px rgba(241, 196, 78, 0.3);
+        }
+
+        /* High contrast mode for proposal cards */
+        @media (prefers-contrast: high) {
+            .proposal-card[role="article"]:focus {
+                outline-width: 4px;
+                outline-offset: 4px;
+                border-width: 3px;
+            }
+
+            .proposal-card-cta:focus {
+                outline-width: 4px;
+                outline-offset: 4px;
+                border: 3px solid currentColor;
+            }
+        }
+
+        /* Keyboard Navigation Enhancement */
+        .carousel-container:focus-within {
+            /* Highlight carousel when any element inside has focus */
+            box-shadow: 0 0 0 2px rgba(241, 196, 78, 0.2);
+            border-radius: var(--border-radius-md);
+        }
+
+        /* Ensure proper tab order for carousel elements */
+        .carousel-control {
+            /* Hidden radio buttons should not interfere with tab order */
+            position: absolute;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        /* Visual feedback for active carousel elements */
+        .carousel-container[aria-live="polite"]:focus-within .carousel-track {
+            /* Subtle visual feedback when carousel has focus */
+            box-shadow: inset 0 0 0 1px rgba(241, 196, 78, 0.1);
+            border-radius: var(--border-radius-md);
+        }
+
+        /* Ensure skip link is properly styled */
+        .carousel-skip-link:focus {
+            position: absolute;
+            top: var(--spacing-sm);
+            left: var(--spacing-sm);
+            background: var(--color-acento-principal);
+            color: var(--color-texto);
+            padding: var(--spacing-sm);
+            text-decoration: none;
+            border-radius: var(--border-radius-sm);
+            z-index: 100;
+            font-weight: 600;
+            box-shadow: var(--shadow-md);
+        }
+
+        /* Ensure instructions are properly styled when focused */
+        .carousel-instructions:focus {
+            position: relative;
+            width: 100%;
+            height: auto;
+            padding: var(--spacing-md);
+            margin: var(--spacing-sm) 0;
+            overflow: visible;
+            clip: auto;
+            white-space: normal;
+            background: var(--color-fondo);
+            border: 2px solid var(--color-acento-principal);
+            border-radius: var(--border-radius-sm);
+            font-size: 0.9rem;
+            color: var(--color-texto);
+            box-shadow: var(--shadow-sm);
+            z-index: 10;
         }
 
         /* Header Styles */
@@ -1080,14 +2440,40 @@
                 height: 2px;
             }
 
-            .proposals-grid {
-                gap: var(--spacing-sm);
+            /* Mobile carousel-specific styles - removed conflicting proposals-grid overrides */
+
+            /* Ensure carousel items snap properly on mobile */
+            .proposals-carousel .carousel-item {
+                scroll-snap-align: center;
+                /* Center alignment for better UX */
+                flex-shrink: 0;
+                /* Prevent items from shrinking */
+                width: calc(100vw - var(--spacing-lg));
+                /* Full viewport width minus margins */
+                max-width: 400px;
+                /* Maximum width for larger mobile screens */
+                margin: 0 var(--spacing-xs);
+                /* Small margin between items */
+            }
+
+            /* Ensure carousel track works properly on mobile */
+            .proposals-carousel .carousel-track {
+                display: flex;
+                flex-direction: row;
+                gap: var(--spacing-md);
                 margin-bottom: var(--spacing-lg);
             }
 
-            .proposal-card {
-                padding: var(--spacing-md);
-                border-radius: 8px;
+            /* Preserve original proposal-card styles within carousel */
+            .proposals-carousel .proposal-card {
+                width: 100%;
+                /* Ensure card fills carousel item */
+                min-height: 280px;
+                /* Consistent height for better UX */
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+                /* All other styles inherited from base .proposal-card */
             }
 
             .proposal-card-title {
@@ -1112,36 +2498,169 @@
                 margin-top: var(--spacing-lg);
             }
 
-            .btn-proposals-main {
-                padding: var(--spacing-sm) var(--spacing-lg);
-                font-size: 1rem;
-                border-radius: 8px;
-                width: 100%;
-                max-width: 300px;
+            /* Mobile carousel touch optimizations */
+            .proposals-carousel .carousel-track {
+                /* Ensure smooth touch scrolling */
+                touch-action: pan-x;
+                /* Add momentum scrolling for iOS */
+                -webkit-overflow-scrolling: touch;
+                /* Prevent vertical scroll interference */
+                overscroll-behavior-x: contain;
+                /* Improve scroll snap behavior */
+                scroll-snap-type: x mandatory;
+                scroll-behavior: smooth;
+                /* Ensure proper spacing for scroll snap */
+                padding-left: var(--spacing-sm);
+                padding-right: var(--spacing-sm);
+                margin-left: calc(-1 * var(--spacing-sm));
+                margin-right: calc(-1 * var(--spacing-sm));
             }
+
+            /* Ensure indicators work properly on mobile */
+            .proposals-carousel .carousel-indicators {
+                margin-top: var(--spacing-md);
+                padding: 0 var(--spacing-sm);
+                justify-content: center;
+            }
+
+            .proposals-carousel .indicator {
+                /* Larger touch targets for mobile */
+                min-width: var(--touch-target-min);
+                min-height: var(--touch-target-min);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                /* Add padding for better touch interaction */
+                padding: var(--spacing-sm);
+                /* Ensure proper spacing between indicators */
+                margin: 0 var(--spacing-xs);
+            }
+
+            /* Mobile-specific indicator active states */
+            #proposals-slide-1:checked~.carousel-indicators label[for="proposals-slide-1"]::before,
+            #proposals-slide-2:checked~.carousel-indicators label[for="proposals-slide-2"]::before {
+                background: var(--carousel-indicator-color);
+                transform: translate(-50%, -50%) scale(1.4);
+                box-shadow: 0 0 0 2px rgba(241, 196, 78, 0.3);
+            }
+
+            min-height: var(--touch-target-min);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-proposals-main {
+            padding: var(--spacing-sm) var(--spacing-lg);
+            font-size: 1rem;
+            border-radius: 8px;
+            width: 100%;
+            max-width: 300px;
+        }
         }
 
         /* Tablet Proposals Styles */
         @media (min-width: 768px) and (max-width: 1023px) {
             .proposals-title {
                 font-size: 2.25rem;
+                margin-bottom: var(--spacing-lg);
             }
 
-            .proposals-grid {
-                grid-template-columns: repeat(2, 1fr);
-                gap: var(--spacing-md);
+            /* Tablet-specific carousel layout */
+            .proposals-carousel .carousel-track {
+                display: flex;
+                flex-wrap: nowrap;
+                overflow: hidden;
+                width: 200%;
+                /* Show 4 cards in 2 slides of 2 cards each */
+                transition: transform var(--carousel-transition);
+                /* Ensure proper alignment */
+                align-items: stretch;
+            }
+
+            .proposals-carousel .carousel-item {
+                width: calc(25% - var(--carousel-gap) * 3 / 4);
+                flex-shrink: 0;
+                padding: 0 calc(var(--carousel-gap) / 2);
+                /* Ensure equal height cards */
+                display: flex;
+                align-items: stretch;
+            }
+
+            /* Tablet navigation logic - show 2 cards at a time */
+            .proposals-carousel #proposals-slide-1:checked~.carousel-track {
+                transform: translateX(0);
+                /* Show cards 1 and 2 */
+            }
+
+            .proposals-carousel #proposals-slide-2:checked~.carousel-track {
+                transform: translateX(-50%);
+                /* Show cards 3 and 4 */
+            }
+
+            /* Ensure proper card spacing in tablet - preserve original styles */
+            .proposals-carousel .proposal-card {
+                height: 100%;
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+                /* All other styles inherited from base .proposal-card */
             }
 
             .proposal-card-title {
                 font-size: 1.2rem;
+                margin-bottom: var(--spacing-sm);
             }
 
             .proposal-card-description {
                 font-size: 1rem;
+                line-height: 1.6;
+                margin-bottom: var(--spacing-md);
+                flex-grow: 1;
+            }
+
+            .proposal-card-cta {
+                font-size: 0.95rem;
+                padding: var(--spacing-sm) var(--spacing-md);
+                margin-top: auto;
+            }
+
+            /* Tablet navigation positioning for proposals */
+            .proposals-carousel .carousel-nav {
+                display: block;
+                opacity: 0.9;
+                transition: opacity var(--carousel-transition), transform var(--carousel-transition);
+            }
+
+            .proposals-carousel .carousel-nav-prev {
+                left: calc(var(--spacing-md) * -0.5);
+            }
+
+            .proposals-carousel .carousel-nav-next {
+                right: calc(var(--spacing-md) * -0.5);
+            }
+
+            /* Enhanced proposals carousel navigation on hover */
+            .proposals-carousel:hover .carousel-nav {
+                opacity: 1;
+                transform: translateY(-50%) scale(1.05);
+            }
+
+            /* Tablet indicators styling */
+            .proposals-carousel .carousel-indicators {
+                margin-top: var(--spacing-lg);
+                justify-content: center;
+            }
+
+            .proposals-carousel .indicator {
+                width: var(--carousel-indicator-size);
+                height: var(--carousel-indicator-size);
             }
 
             .btn-proposals-main {
                 font-size: 1.05rem;
+                padding: var(--spacing-md) var(--spacing-lg);
+                margin-top: var(--spacing-lg);
             }
         }
 
@@ -1580,30 +3099,22 @@
             margin-bottom: var(--spacing-md);
         }
 
-        .profile-placeholder {
+        .profile-photo {
             width: 120px;
             height: 120px;
             border-radius: 50%;
-            background: linear-gradient(135deg, var(--color-acento-principal), var(--color-acento-secundario));
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            object-fit: cover;
+            object-position: center;
             box-shadow: 0 4px 15px rgba(241, 196, 78, 0.3);
             border: 4px solid rgba(255, 255, 255, 0.9);
             transition: all var(--transition-smooth);
+            background: linear-gradient(135deg, var(--color-acento-principal), var(--color-acento-secundario));
+            /* Fallback background while image loads */
         }
 
-        .team-profile:hover .profile-placeholder {
+        .team-profile:hover .profile-photo {
             transform: scale(1.05);
             box-shadow: 0 8px 25px rgba(212, 160, 23, 0.4);
-        }
-
-        .profile-initials {
-            font-family: var(--fuente-titulos);
-            font-size: 2rem;
-            font-weight: 700;
-            color: var(--color-texto);
-            text-shadow: 0 2px 4px rgba(54, 69, 79, 0.1);
         }
 
         .team-profile-content {
@@ -1664,13 +3175,9 @@
                 border-radius: 12px;
             }
 
-            .profile-placeholder {
+            .profile-photo {
                 width: 100px;
                 height: 100px;
-            }
-
-            .profile-initials {
-                font-size: 1.5rem;
             }
 
             .team-profile-name {
@@ -1763,13 +3270,9 @@
                 margin-bottom: 0;
             }
 
-            .profile-placeholder {
+            .profile-photo {
                 width: 150px;
                 height: 150px;
-            }
-
-            .profile-initials {
-                font-size: 2.5rem;
             }
 
             .team-profile-content {
@@ -3243,15 +4746,11 @@
                 overflow-wrap: break-word;
             }
 
-            /* Optimize images and placeholders for mobile */
-            .profile-placeholder {
+            /* Optimize images for mobile */
+            .profile-photo {
                 width: 100px;
                 height: 100px;
                 flex-shrink: 0;
-            }
-
-            .profile-initials {
-                font-size: 1.5rem;
             }
 
             /* Mobile-specific spacing adjustments */
@@ -3506,8 +5005,8 @@
                 line-height: 1.6;
             }
 
-            /* Optimize images and placeholders */
-            .profile-placeholder {
+            /* Optimize images */
+            .profile-photo {
                 margin: 0 auto var(--spacing-sm);
             }
         }
@@ -4451,52 +5950,121 @@
                 <div class="proposals-content">
                     <h2 class="proposals-title">Nuestras Propuestas</h2>
 
-                    <div class="proposals-grid">
-                        <!-- Card 1: Clases Regulares -->
-                        <div class="proposal-card">
-                            <h3 class="proposal-card-title">Clases Regulares: Teatro y Danza</h3>
-                            <p class="proposal-card-description">
-                                El pilar de nuestro día a día. Clases semanales donde exploramos el movimiento
-                                consciente, la expresión corporal y las técnicas de teatro. Un espacio de
-                                crecimiento continuo donde cada cuerpo encuentra su propio lenguaje artístico en un
-                                ambiente de apoyo y creatividad compartida.
-                            </p>
-                            <a href="#contacto" class="proposal-card-cta">Ver Horarios y Apuntarse</a>
+                    <!-- Carousel Container for Proposals -->
+                    <div class="carousel-container proposals-carousel" role="region"
+                        aria-label="Carrusel de propuestas artísticas" aria-live="polite">
+                        <!-- Skip Link for Keyboard Users -->
+                        <a href="#proposals-end" class="carousel-skip-link">Saltar carrusel de propuestas</a>
+
+                        <!-- Keyboard Navigation Instructions -->
+                        <div class="carousel-instructions" tabindex="0" role="note"
+                            aria-label="Instrucciones de navegación">
+                            Usa las teclas Tab para navegar entre los controles del carrusel, Enter o Espacio para
+                            activar, y las flechas izquierda/derecha para cambiar de página.
                         </div>
 
-                        <!-- Card 2: Talleres Intensivos -->
-                        <div class="proposal-card">
-                            <h3 class="proposal-card-title">Talleres Intensivos</h3>
-                            <p class="proposal-card-description">
-                                Inmersiones profundas en técnicas específicas con artistas invitados y especialistas.
-                                Desde contact improvisation hasta técnicas de clown, cada taller es una oportunidad
-                                única de expandir horizontes creativos y conectar con nuevas formas de expresión
-                                artística.
-                            </p>
-                            <a href="#contacto" class="proposal-card-cta">Próximos Talleres</a>
+                        <!-- Hidden Radio Buttons for Navigation Control -->
+                        <input type="radio" name="proposals-carousel-nav" id="proposals-slide-1"
+                            class="carousel-control" checked aria-describedby="proposals-slide-1-desc">
+                        <input type="radio" name="proposals-carousel-nav" id="proposals-slide-2"
+                            class="carousel-control" aria-describedby="proposals-slide-2-desc">
+
+                        <!-- Screen reader descriptions for slides -->
+                        <div id="proposals-slide-1-desc" class="sr-only">Página 1 de 2: Clases Regulares y Talleres
+                            Intensivos</div>
+                        <div id="proposals-slide-2-desc" class="sr-only">Página 2 de 2: Laboratorios de Creación y
+                            Muestras Abiertas</div>
+
+                        <!-- Carousel Track -->
+                        <div class="carousel-track" role="tabpanel" aria-label="Propuestas artísticas">
+                            <!-- Card 1: Clases Regulares -->
+                            <div class="carousel-item" role="group" aria-labelledby="card-1-title">
+                                <article class="proposal-card" role="article" tabindex="0">
+                                    <h3 id="card-1-title" class="proposal-card-title">Clases Regulares: Teatro y Danza
+                                    </h3>
+                                    <p class="proposal-card-description">
+                                        El pilar de nuestro día a día. Clases semanales donde exploramos el movimiento
+                                        consciente, la expresión corporal y las técnicas de teatro. Un espacio de
+                                        crecimiento continuo donde cada cuerpo encuentra su propio lenguaje artístico en
+                                        un
+                                        ambiente de apoyo y creatividad compartida.
+                                    </p>
+                                    <a href="#contacto" class="proposal-card-cta" aria-describedby="card-1-title">Ver
+                                        Horarios y Apuntarse</a>
+                                </article>
+                            </div>
+
+                            <!-- Card 2: Talleres Intensivos -->
+                            <div class="carousel-item" role="group" aria-labelledby="card-2-title">
+                                <article class="proposal-card" role="article" tabindex="0">
+                                    <h3 id="card-2-title" class="proposal-card-title">Talleres Intensivos</h3>
+                                    <p class="proposal-card-description">
+                                        Inmersiones profundas en técnicas específicas con artistas invitados y
+                                        especialistas.
+                                        Desde contact improvisation hasta técnicas de clown, cada taller es una
+                                        oportunidad
+                                        única de expandir horizontes creativos y conectar con nuevas formas de expresión
+                                        artística.
+                                    </p>
+                                    <a href="#contacto" class="proposal-card-cta"
+                                        aria-describedby="card-2-title">Próximos Talleres</a>
+                                </article>
+                            </div>
+
+                            <!-- Card 3: Laboratorios de Creación -->
+                            <div class="carousel-item" role="group" aria-labelledby="card-3-title">
+                                <article class="proposal-card" role="article" tabindex="0">
+                                    <h3 id="card-3-title" class="proposal-card-title">Laboratorios de Creación</h3>
+                                    <p class="proposal-card-description">
+                                        Espacios experimentales donde las ideas toman forma. Procesos colaborativos de
+                                        investigación artística donde participantes y facilitadores co-crean nuevas
+                                        propuestas
+                                        escénicas, explorando los límites entre disciplinas y descubriendo nuevos
+                                        territorios
+                                        expresivos.
+                                    </p>
+                                    <a href="#contacto" class="proposal-card-cta" aria-describedby="card-3-title">Únete
+                                        al Laboratorio</a>
+                                </article>
+                            </div>
+
+                            <!-- Card 4: Muestras y Procesos Abiertos -->
+                            <div class="carousel-item" role="group" aria-labelledby="card-4-title">
+                                <article class="proposal-card" role="article" tabindex="0">
+                                    <h3 id="card-4-title" class="proposal-card-title">Muestras y Procesos Abiertos</h3>
+                                    <p class="proposal-card-description">
+                                        Compartimos nuestro trabajo en proceso con la comunidad. Presentaciones íntimas
+                                        donde el
+                                        público se convierte en testigo y cómplice del proceso creativo, creando un
+                                        diálogo
+                                        auténtico entre artistas y espectadores en un ambiente cercano y acogedor.
+                                    </p>
+                                    <a href="#contacto" class="proposal-card-cta"
+                                        aria-describedby="card-4-title">Próximas Muestras</a>
+                                </article>
+                            </div>
                         </div>
 
-                        <!-- Card 3: Laboratorios de Creación -->
-                        <div class="proposal-card">
-                            <h3 class="proposal-card-title">Laboratorios de Creación</h3>
-                            <p class="proposal-card-description">
-                                Espacios experimentales donde las ideas toman forma. Procesos colaborativos de
-                                investigación artística donde participantes y facilitadores co-crean nuevas propuestas
-                                escénicas, explorando los límites entre disciplinas y descubriendo nuevos territorios
-                                expresivos.
-                            </p>
-                            <a href="#contacto" class="proposal-card-cta">Únete al Laboratorio</a>
+                        <!-- Navigation Controls (Hidden on Mobile) -->
+                        <div class="carousel-nav carousel-nav-prev" role="button" tabindex="0">
+                            <label for="proposals-slide-1" class="nav-button nav-prev-btn"
+                                aria-label="Ir a la página anterior de propuestas" role="button" tabindex="0"
+                                data-carousel-action="prev">‹</label>
+                        </div>
+                        <div class="carousel-nav carousel-nav-next" role="button" tabindex="0">
+                            <label for="proposals-slide-2" class="nav-button nav-next-btn"
+                                aria-label="Ir a la página siguiente de propuestas" role="button" tabindex="0"
+                                data-carousel-action="next">›</label>
                         </div>
 
-                        <!-- Card 4: Muestras y Procesos Abiertos -->
-                        <div class="proposal-card">
-                            <h3 class="proposal-card-title">Muestras y Procesos Abiertos</h3>
-                            <p class="proposal-card-description">
-                                Compartimos nuestro trabajo en proceso con la comunidad. Presentaciones íntimas donde el
-                                público se convierte en testigo y cómplice del proceso creativo, creando un diálogo
-                                auténtico entre artistas y espectadores en un ambiente cercano y acogedor.
-                            </p>
-                            <a href="#contacto" class="proposal-card-cta">Próximas Muestras</a>
+                        <!-- Indicators -->
+                        <div class="carousel-indicators" role="tablist" aria-label="Navegación de páginas del carrusel">
+                            <label for="proposals-slide-1" class="indicator" role="tab"
+                                aria-label="Página 1 de 2: Clases Regulares y Talleres Intensivos" aria-selected="true"
+                                tabindex="0" data-slide="1"></label>
+                            <label for="proposals-slide-2" class="indicator" role="tab"
+                                aria-label="Página 2 de 2: Laboratorios de Creación y Muestras Abiertas"
+                                aria-selected="false" tabindex="-1" data-slide="2"></label>
                         </div>
                     </div>
 
@@ -4504,6 +6072,9 @@
                     <div class="proposals-main-cta">
                         <a href="#contacto" class="btn-proposals-main">Ver la Programación Completa en Vivo</a>
                     </div>
+
+                    <!-- Skip Link Target -->
+                    <div id="proposals-end" class="sr-only">Final del carrusel de propuestas</div>
                 </div>
             </div>
         </section>
@@ -4576,9 +6147,8 @@
                     <!-- Claudia Monleón Profile -->
                     <div class="team-profile">
                         <div class="team-profile-image">
-                            <div class="profile-placeholder">
-                                <span class="profile-initials">CM</span>
-                            </div>
+                            <img src="assets/claudia.webp" alt="Claudia Monleón - Directora y Fundadora"
+                                class="profile-photo">
                         </div>
                         <div class="team-profile-content">
                             <h3 class="team-profile-name">Claudia Monleón</h3>
@@ -4603,9 +6173,7 @@
                     <!-- Paula Esteve Profile -->
                     <div class="team-profile">
                         <div class="team-profile-image">
-                            <div class="profile-placeholder">
-                                <span class="profile-initials">PE</span>
-                            </div>
+                            <img src="assets/paula.webp" alt="Paula Esteve - Docente" class="profile-photo">
                         </div>
                         <div class="team-profile-content">
                             <h3 class="team-profile-name">Paula Esteve</h3>
