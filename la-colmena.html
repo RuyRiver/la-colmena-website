@@ -2719,6 +2719,129 @@
             }
         }
 
+        /* Events Section Styles */
+        .events {
+            position: relative;
+            background-image: url('./assets/eventos.webp');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            padding: var(--spacing-xxl) 0;
+            min-height: 400px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .events::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(54, 69, 79, 0.6);
+            z-index: 1;
+        }
+
+        .events-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            color: var(--color-blanco);
+            max-width: 600px;
+            padding: var(--spacing-lg);
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .events-text {
+            font-size: 1.25rem;
+            font-weight: 500;
+            margin-bottom: var(--spacing-lg);
+            line-height: 1.6;
+        }
+
+        .events-cta {
+            display: inline-block;
+            padding: var(--spacing-md) var(--spacing-xl);
+            background: var(--color-acento-principal);
+            color: var(--color-texto);
+            text-decoration: none;
+            border-radius: var(--border-radius-md);
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all var(--transition-fast);
+            box-shadow: var(--shadow-md);
+        }
+
+        .events-cta:hover {
+            background: var(--color-acento-secundario);
+            color: var(--color-blanco);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        /* Mobile Events Styles */
+        @media (max-width: 767px) {
+            .events {
+                padding: var(--spacing-xl) 0;
+                min-height: 350px;
+                background-attachment: scroll;
+            }
+
+            .events-content {
+                padding: var(--spacing-md);
+                margin: 0 var(--spacing-sm);
+            }
+
+            .events-text {
+                font-size: 1.1rem;
+                margin-bottom: var(--spacing-md);
+            }
+
+            .events-cta {
+                padding: var(--spacing-md) var(--spacing-lg);
+                font-size: 1rem;
+            }
+        }
+
+        /* Tablet Events Styles */
+        @media (min-width: 768px) and (max-width: 1023px) {
+            .events {
+                padding: var(--spacing-xxl) 0;
+                min-height: 450px;
+            }
+
+            .events-text {
+                font-size: 1.3rem;
+            }
+        }
+
+        /* Desktop Events Styles */
+        @media (min-width: 1024px) {
+            .events {
+                padding: calc(var(--spacing-xxl) * 1.5) 0;
+                min-height: 500px;
+            }
+
+            .events-content {
+                padding: var(--spacing-xl);
+            }
+
+            .events-text {
+                font-size: 1.4rem;
+                margin-bottom: var(--spacing-xl);
+            }
+
+            .events-cta {
+                padding: var(--spacing-lg) var(--spacing-xxl);
+                font-size: 1.2rem;
+            }
+        }
+
         /* Services Section Styles */
         .services {
             background-color: var(--color-fondo);
@@ -5877,6 +6000,9 @@
                             <a href="#propuestas" class="nav-link">Propuestas</a>
                         </li>
                         <li class="nav-item">
+                            <a href="#eventos" class="nav-link">Eventos</a>
+                        </li>
+                        <li class="nav-item">
                             <a href="#servicios" class="nav-link">Servicios</a>
                         </li>
                         <li class="nav-item">
@@ -6067,17 +6193,17 @@
                                 aria-selected="false" tabindex="-1" data-slide="2"></label>
                         </div>
                     </div>
-
-                    <!-- Main CTA Button -->
-                    <div class="proposals-main-cta">
-                        <a href="https://oona.es/organizador/8e7cd72f-19ec-411e-bead-03e3ab2b69d3"
-                            class="btn-proposals-main" target="_blank" rel="noopener noreferrer">Ver la Programación
-                            Completa en Vivo</a>
-                    </div>
-
                     <!-- Skip Link Target -->
                     <div id="proposals-end" class="sr-only">Final del carrusel de propuestas</div>
                 </div>
+            </div>
+        </section>
+
+        <!-- Events Section -->
+        <section id="eventos" class="events">
+            <div class="events-content">
+                <p class="events-text">Organizamos frecuentemente diferentes actividades de creación y formación en La Colmena</p>
+                <a href="https://oona.es/organizador/8e7cd72f-19ec-411e-bead-03e3ab2b69d3" class="events-cta" target="_blank" rel="noopener noreferrer">Ver Eventos</a>
             </div>
         </section>
 
@@ -6232,6 +6358,7 @@
                             <li><a href="#inicio" class="footer-nav-link">Inicio</a></li>
                             <li><a href="#sobre-el-proyecto" class="footer-nav-link">Sobre el Proyecto</a></li>
                             <li><a href="#propuestas" class="footer-nav-link">Nuestras Propuestas</a></li>
+                            <li><a href="#eventos" class="footer-nav-link">Eventos</a></li>
                             <li><a href="#servicios" class="footer-nav-link">Servicios</a></li>
                             <li><a href="#equipo" class="footer-nav-link">Equipo</a></li>
                             <li><a href="#contacto" class="footer-nav-link">Contacto</a></li>
