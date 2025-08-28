@@ -62,7 +62,9 @@
             --transition-slow: 0.6s ease;
 
             /* Carousel Configuration Variables */
-            --carousel-gap: var(--spacing-md);
+            --carousel-gap: 0.5rem;
+            --carousel-gap-small: 0.5rem;
+            --carousel-padding: 0.75rem;
             --carousel-item-width-mobile: 100%;
             --carousel-item-width-tablet: calc(50% - var(--carousel-gap) / 2);
             --carousel-item-width-desktop: calc(50% - var(--carousel-gap) / 2);
@@ -97,7 +99,8 @@
                 --carousel-items-visible: 2;
                 --carousel-item-width: var(--carousel-item-width-tablet);
                 --carousel-nav-display: block;
-                --carousel-gap: var(--spacing-md);
+                --carousel-gap: 0.5rem;
+                --carousel-padding: 1rem;
 
                 /* Tablet-specific navigation sizing */
                 --carousel-nav-size: 48px;
@@ -118,6 +121,8 @@
                 --carousel-items-visible: 2;
                 --carousel-item-width: var(--carousel-item-width-desktop);
                 --carousel-nav-display: block;
+                --carousel-gap: 0.5rem;
+                --carousel-padding: 1.25rem;
             }
         }
 
@@ -163,14 +168,15 @@
             :root {
                 --carousel-nav-size: 56px;
                 --carousel-indicator-size: 18px;
-                --carousel-gap: var(--spacing-xl);
+                --carousel-gap: 0.5rem;
+                --carousel-padding: 1.5rem;
             }
         }
 
         /* Tablet Indicator Styles */
         @media (min-width: 768px) and (max-width: 1023px) {
             .carousel-indicators {
-                margin-top: var(--spacing-lg);
+                margin-top: 0.75rem;
                 padding: var(--spacing-sm) 0;
             }
 
@@ -203,7 +209,7 @@
         /* Desktop Indicator Styles */
         @media (min-width: 1024px) {
             .carousel-indicators {
-                margin-top: var(--spacing-lg);
+                margin-top: 0.75rem;
             }
 
             .indicator {
@@ -332,6 +338,7 @@
             position: relative;
             width: 100%;
             overflow: hidden;
+            padding: 0 var(--carousel-padding);
         }
 
         /* Carousel Track Component */
@@ -357,6 +364,15 @@
             flex: 0 0 auto;
             scroll-snap-align: start;
             width: var(--carousel-item-width);
+        }
+
+        /* Tablet and Desktop: Use flex-fill for adaptive width */
+        @media (min-width: 768px) {
+            .carousel-item {
+                flex: 1 1 0;
+                width: auto;
+                min-width: 0;
+            }
         }
 
         /* Navigation Controls Component */
@@ -476,7 +492,7 @@
             display: flex;
             justify-content: center;
             gap: var(--spacing-xs);
-            margin-top: var(--spacing-md);
+            margin-top: 0.75rem;
             padding: var(--spacing-xs) 0;
         }
 
@@ -731,7 +747,7 @@
 
             /* Enhanced desktop indicator styling */
             .carousel-indicators {
-                margin-top: var(--spacing-xl);
+                margin-top: 0.75rem;
                 padding: var(--spacing-md) 0;
             }
 
@@ -817,7 +833,7 @@
             }
 
             .carousel-indicators {
-                margin-top: calc(var(--spacing-xl) + var(--spacing-md));
+                margin-top: 0.75rem;
             }
 
             .indicator {
@@ -886,10 +902,11 @@
             }
 
             .carousel-item {
-                flex: 0 0 calc(50% - var(--carousel-gap) / 2);
+                flex: 1 1 0;
                 scroll-snap-align: start;
                 scroll-snap-stop: always;
-                min-width: calc(50% - var(--carousel-gap) / 2);
+                min-width: 0;
+                width: auto;
             }
 
             /* Navigation control for tablet - scroll to specific positions */
@@ -2313,6 +2330,11 @@
             transition: all var(--transition-smooth);
             position: relative;
             overflow: hidden;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
 
         .proposal-card::before {
@@ -2352,6 +2374,9 @@
             line-height: 1.6;
             margin-bottom: var(--spacing-md);
             font-size: 0.95rem;
+            flex-grow: 1;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
         }
 
         .proposal-card-cta {
@@ -2518,7 +2543,7 @@
 
             /* Ensure indicators work properly on mobile */
             .proposals-carousel .carousel-indicators {
-                margin-top: var(--spacing-md);
+                margin-top: 0.75rem;
                 padding: 0 var(--spacing-sm);
                 justify-content: center;
             }
@@ -2648,7 +2673,7 @@
 
             /* Tablet indicators styling */
             .proposals-carousel .carousel-indicators {
-                margin-top: var(--spacing-lg);
+                margin-top: 0.75rem;
                 justify-content: center;
             }
 
@@ -6202,8 +6227,10 @@
         <!-- Events Section -->
         <section id="eventos" class="events">
             <div class="events-content">
-                <p class="events-text">Organizamos frecuentemente diferentes actividades de creación y formación en La Colmena</p>
-                <a href="https://oona.es/organizador/8e7cd72f-19ec-411e-bead-03e3ab2b69d3" class="events-cta" target="_blank" rel="noopener noreferrer">Ver Eventos</a>
+                <p class="events-text">Organizamos frecuentemente diferentes actividades de creación y formación en La
+                    Colmena</p>
+                <a href="https://oona.es/organizador/8e7cd72f-19ec-411e-bead-03e3ab2b69d3" class="events-cta"
+                    target="_blank" rel="noopener noreferrer">Ver Eventos</a>
             </div>
         </section>
 
