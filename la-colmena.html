@@ -13,6 +13,12 @@
         href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Lora:wght@400;500;600;700&display=swap"
         rel="stylesheet">
 
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="alternate icon" href="favicon.ico">
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
+    <meta name="theme-color" content="#ffffff">
+
     <style>
         /* CSS Custom Properties (Design Tokens) */
         :root {
@@ -2391,12 +2397,13 @@
 
         /* Imagen vertical */
         .content-image-vertical {
-            float: right;
+            float: none;
             width: 250px;
             height: auto;
-            margin: 0 0 var(--spacing-md) var(--spacing-md);
+            margin: 0;
             border-radius: var(--border-radius-md);
             box-shadow: var(--shadow-sm);
+            display: block;
         }
 
         /* Imagen horizontal */
@@ -2422,18 +2429,219 @@
 
         /* Responsive para móviles */
         @media (max-width: 767px) {
+            .content-image-container {
+                float: none;
+                display: block;
+                margin: var(--spacing-md) auto;
+            }
 
             .content-image-vertical,
             .content-image-square {
                 float: none;
                 display: block;
                 width: 200px;
-                margin: var(--spacing-md) auto;
+                margin: 0;
             }
 
             .content-image-horizontal {
                 max-width: 100%;
                 margin: var(--spacing-md) auto;
+            }
+        }
+
+        /* ========================================
+           IMAGE MODAL SYSTEM
+           ======================================== */
+
+        :root {
+            --enable-image-modal: 1;
+            /* Variable para activar/desactivar globalmente */
+            --modal-animation-duration: 0.3s;
+        }
+
+        /* Container para las imágenes clickeables */
+        .content-image-container {
+            position: relative;
+            display: block;
+            cursor: pointer;
+            float: right;
+            margin: 0 0 var(--spacing-md) var(--spacing-md);
+        }
+
+        /* Mejoras a las imágenes existentes - cursor pointer y hover effect */
+        .content-image-vertical,
+        .content-image-horizontal,
+        .content-image-square {
+            cursor: pointer;
+            transition: transform var(--transition-fast), opacity var(--transition-fast);
+        }
+
+        .content-image-vertical:hover,
+        .content-image-horizontal:hover,
+        .content-image-square:hover {
+            transform: scale(1.05);
+            opacity: 0.9;
+        }
+
+        /* Ícono de lupa - siempre visible */
+        .content-image-container::after {
+            content: '🔍';
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 32px;
+            height: 32px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            border-radius: 50%;
+            opacity: 0.6;
+            transition: opacity var(--transition-fast);
+            font-size: 1.2rem;
+            pointer-events: none;
+            z-index: 2;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .content-image-container:hover::after,
+        .content-image-container:active::after {
+            opacity: 1;
+        }
+
+        /* Modal overlay */
+        .image-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            margin: 0;
+            padding: 0;
+            background: rgba(0, 0, 0, 0);
+            z-index: 9999;
+            cursor: pointer;
+            transition: all var(--modal-animation-duration) ease;
+            backdrop-filter: blur(0px);
+            -webkit-backdrop-filter: blur(0px);
+            box-sizing: border-box;
+        }
+
+        .image-modal:target {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            animation: fadeIn var(--modal-animation-duration) ease;
+            text-align: center;
+        }
+
+        .image-modal img {
+            max-width: 90vw;
+            max-height: 90vh;
+            width: auto;
+            height: auto;
+            object-fit: contain;
+            transform: scale(0.8);
+            transition: transform var(--modal-animation-duration) ease;
+            border-radius: var(--border-radius-md);
+            box-shadow: var(--shadow-xl);
+            cursor: default;
+            /* Centrado solo para imágenes del modal */
+            margin: 0;
+            display: inline-block;
+        }
+
+        .image-modal:target img {
+            transform: scale(1);
+            animation: zoomIn var(--modal-animation-duration) ease;
+        }
+
+        /* Animaciones CSS */
+        @keyframes fadeIn {
+            from {
+                background: rgba(0, 0, 0, 0);
+                backdrop-filter: blur(0px);
+                -webkit-backdrop-filter: blur(0px);
+            }
+
+            to {
+                background: rgba(0, 0, 0, 0.8);
+                backdrop-filter: blur(5px);
+                -webkit-backdrop-filter: blur(5px);
+            }
+        }
+
+        @keyframes zoomIn {
+            from {
+                transform: scale(0.8);
+            }
+
+            to {
+                transform: scale(1);
+            }
+        }
+
+        /* Mobile optimizations */
+        @media (max-width: 767px) {
+            .image-modal img {
+                max-width: 95vw;
+                max-height: 95vh;
+            }
+
+            .content-image-container::after {
+                width: 28px;
+                height: 28px;
+                font-size: 1rem;
+                top: 8px;
+                right: 8px;
+            }
+        }
+
+        /* Tablet optimizations */
+        @media (min-width: 768px) and (max-width: 1023px) {
+            .content-image-container::after {
+                width: 30px;
+                height: 30px;
+                font-size: 1.1rem;
+            }
+        }
+
+        /* Desktop optimizations */
+        @media (min-width: 1024px) {
+            .content-image-container::after {
+                width: 36px;
+                height: 36px;
+                font-size: 1.3rem;
+                top: 12px;
+                right: 12px;
+            }
+        }
+
+        /* Accessibility - Reduced motion support */
+        @media (prefers-reduced-motion: reduce) {
+
+            .image-modal,
+            .image-modal img,
+            .content-image-vertical,
+            .content-image-horizontal,
+            .content-image-square,
+            .content-image-container::after {
+                transition: none;
+                animation: none;
+            }
+
+            .image-modal:target img {
+                transform: scale(1);
+            }
+
+            .content-image-vertical:hover,
+            .content-image-horizontal:hover,
+            .content-image-square:hover {
+                transform: none;
             }
         }
 
@@ -6215,7 +6423,8 @@
                 <p class="hero-subtitle">Un espacio donde la creación escénica y el movimiento se
                     encuentran con la tranquilidad del entorno natural.</p>
                 <div class="hero-buttons">
-                    <a href="#propuestas" class="btn btn-primary">Ver Programación en Vivo</a>
+                    <a href="https://oona.es/organizador/8e7cd72f-19ec-411e-bead-03e3ab2b69d3" target="_blank"
+                        class="btn btn-primary">Agenda de Eventos</a>
                     <a href="#servicios" class="btn btn-secondary">Nuestros Servicios</a>
                 </div>
             </div>
@@ -6476,8 +6685,11 @@
                             presencia enriquece las residencias y procesos de La Colmena, ofreciendo herramientas que
                             ayudan a los artistas a cultivar la presencia escénica, la calma y la energía vital que
                             atraviesa toda obra.
+                        <div class="content-image-container">
                             <img src="assets/senda-jade.webp" class="content-image-vertical"
+                                onclick="window.location.hash='#modal-senda-jade'"
                                 alt="La Senda del Jade - Prácticas de bienestar y artes orientales">
+                        </div>
                         </p>
 
                         <p class="jade-intro">Juntas, La Senda del Jade y La Colmena crean un espacio donde el arte y el
@@ -6615,6 +6827,13 @@
             </div>
         </div>
     </footer>
+
+    <!-- Image Modals -->
+    <div id="modal-senda-jade" class="image-modal" onclick="window.location.hash=''">
+        <img src="assets/senda-jade.webp"
+            alt="La Senda del Jade - Prácticas de bienestar y artes orientales - Vista completa">
+    </div>
+
 </body>
 
 </html>
