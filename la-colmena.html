@@ -2427,6 +2427,43 @@
             box-shadow: var(--shadow-sm);
         }
 
+        /* ========================================
+           BANNER IMAGE SYSTEM
+           ======================================== */
+
+        /* Imagen banner - modificador de horizontal */
+        .content-image-horizontal--banner {
+            width: 100%;
+            aspect-ratio: 16/9;
+            object-fit: cover;
+            object-position: center bottom;
+            display: block;
+            margin: var(--spacing-lg) auto;
+            border-radius: var(--border-radius-md);
+            box-shadow: var(--shadow-sm);
+            cursor: pointer;
+            transition: transform var(--transition-fast), opacity var(--transition-fast);
+        }
+
+        /* Clases auxiliares para diferentes posiciones de crop */
+        .content-image-horizontal--banner-top {
+            object-position: center top;
+        }
+
+        .content-image-horizontal--banner-center {
+            object-position: center center;
+        }
+
+        .content-image-horizontal--banner-bottom {
+            object-position: center bottom;
+        }
+
+        /* Hover effect para banner */
+        .content-image-horizontal--banner:hover {
+            transform: scale(1.02);
+            opacity: 0.9;
+        }
+
         /* Responsive para móviles */
         @media (max-width: 767px) {
             .content-image-container {
@@ -2445,6 +2482,12 @@
 
             .content-image-horizontal {
                 max-width: 100%;
+                margin: var(--spacing-md) auto;
+            }
+
+            /* Banner responsive - 4:3 en mobile */
+            .content-image-horizontal--banner {
+                aspect-ratio: 4/3;
                 margin: var(--spacing-md) auto;
             }
         }
@@ -6579,6 +6622,13 @@
                             Ubicada en el corazón de Turís, Valencia, nuestra casa se ha convertido en un refugio
                             creativo que acoge a artistas, estudiantes y creadores de todo el mundo.</p>
 
+                        <div class="content-image-container">
+                            <img src="assets/colmena-about.webp"
+                                class="content-image-horizontal--banner content-image-horizontal--banner-center"
+                                onclick="window.location.hash='#modal-colmena-about'"
+                                alt="La Colmena - Espacio creativo en la naturaleza">
+                        </div>
+
                         <p>Desde nuestros inicios, hemos crecido orgánicamente, construyendo una comunidad vibrante que
                             celebra la diversidad artística y la conexión humana. Lo que comenzó como un pequeño estudio
                             de movimiento se ha transformado en un ecosistema completo de creación, donde convergen
@@ -6984,6 +7034,10 @@
     <div id="modal-senda-jade" class="image-modal" onclick="window.location.hash=''">
         <img src="assets/senda-jade.webp"
             alt="La Senda del Jade - Prácticas de bienestar y artes orientales - Vista completa">
+    </div>
+
+    <div id="modal-colmena-about" class="image-modal" onclick="window.location.hash=''">
+        <img src="assets/colmena-about.webp" alt="La Colmena - Espacio creativo en la naturaleza - Vista completa">
     </div>
 
 </body>
