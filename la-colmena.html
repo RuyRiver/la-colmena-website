@@ -95,9 +95,9 @@
                 --spacing-xxl: 4.5rem;
                 --header-height: 80px;
 
-                /* Tablet Carousel Configuration */
+                /* Tablet Carousel Configuration - unified with desktop */
                 --carousel-items-visible: 2;
-                --carousel-item-width: var(--carousel-item-width-tablet);
+                --carousel-item-width: calc(25% - var(--carousel-gap) * 3 / 4);
                 --carousel-nav-display: block;
                 --carousel-gap: 0.5rem;
                 --carousel-padding: 1rem;
@@ -333,12 +333,18 @@
            CAROUSEL BASE STYLES
            ======================================== */
 
+        /* Carousel Wrapper Component - New parent container */
+        .carousel-wrapper {
+            position: relative;
+            width: 100%;
+            padding: 0 var(--carousel-padding);
+        }
+
         /* Carousel Container Component */
         .carousel-container {
             position: relative;
             width: 100%;
-            overflow: hidden;
-            padding: 0 var(--carousel-padding);
+            overflow: visible;
         }
 
         /* Carousel Track Component */
@@ -388,11 +394,11 @@
         }
 
         .carousel-nav-prev {
-            left: var(--spacing-sm);
+            left: 0;
         }
 
         .carousel-nav-next {
-            right: var(--spacing-sm);
+            right: 0;
         }
 
         /* Show navigation controls on carousel hover */
@@ -592,15 +598,42 @@
 
         @media (min-width: 768px) and (max-width: 1023px) {
             .carousel-item {
-                width: var(--carousel-item-width-tablet);
+                width: calc(25% - var(--carousel-gap) * 3 / 4);
+                flex-shrink: 0;
+                min-width: calc(25% - var(--carousel-gap) * 3 / 4);
             }
 
-            /* Tablet-specific carousel container */
+            /* Tablet-specific carousel container - unified with desktop */
             .carousel-container {
                 position: relative;
                 width: 100%;
-                overflow: hidden;
-                /* Ensure container can handle 2-card layout */
+                overflow: visible;
+                contain: layout style paint;
+            }
+
+            /* Tablet carousel track - unified transform logic */
+            .carousel-track {
+                transition: transform var(--carousel-transition);
+                width: 200%;
+                display: flex;
+                flex-wrap: nowrap;
+                overflow: visible;
+                will-change: transform;
+                backface-visibility: hidden;
+            }
+
+            /* Tablet navigation - unified transform slides */
+            #proposals-slide-1:checked~.carousel-track {
+                transform: translateX(0);
+            }
+
+            #proposals-slide-2:checked~.carousel-track {
+                transform: translateX(calc(-50% - var(--carousel-gap) / 2));
+            }
+
+            /* Ensure proper spacing between cards */
+            .carousel-item:not(:last-child) {
+                margin-right: var(--carousel-gap);
             }
 
             /* Tablet navigation controls positioning - Improved */
@@ -610,19 +643,16 @@
                 top: 50%;
                 transform: translateY(-50%);
                 z-index: 15;
-                /* Higher z-index for better layering */
                 opacity: 0.9;
                 transition: opacity var(--carousel-transition), transform var(--carousel-transition);
             }
 
             .carousel-nav-prev {
-                left: calc(var(--spacing-md) * -1);
-                /* Moved further from cards */
+                left: 0;
             }
 
             .carousel-nav-next {
-                right: calc(var(--spacing-md) * -1);
-                /* Moved further from cards */
+                right: 0;
             }
 
             /* Show navigation on carousel hover */
@@ -637,11 +667,9 @@
                 height: calc(var(--carousel-nav-size) + 4px);
                 font-size: 1.6rem;
                 box-shadow: var(--shadow-md);
-                /* Ensure proper touch targets for tablets */
                 min-width: var(--touch-target-min);
                 min-height: var(--touch-target-min);
                 touch-action: manipulation;
-                /* Optimize for touch */
                 backdrop-filter: blur(4px);
                 -webkit-backdrop-filter: blur(4px);
             }
@@ -665,6 +693,12 @@
                 border-radius: 50%;
                 padding: var(--spacing-xs);
             }
+
+            /* Optimize for smooth transitions */
+            .carousel-track,
+            .carousel-item {
+                transform: translateZ(0);
+            }
         }
 
         @media (min-width: 1024px) {
@@ -685,13 +719,13 @@
             }
 
             .carousel-nav-prev {
-                left: calc(var(--spacing-lg) * -1.2);
-                /* Moved further from cards */
+                left: 0;
+                /* Positioned at wrapper padding edge */
             }
 
             .carousel-nav-next {
-                right: calc(var(--spacing-lg) * -1.2);
-                /* Moved further from cards */
+                right: 0;
+                /* Positioned at wrapper padding edge */
             }
 
             /* Enhanced desktop navigation visibility on hover */
@@ -811,13 +845,13 @@
         /* Extra Large Desktop Optimizations (≥1440px) */
         @media (min-width: 1440px) {
             .carousel-nav-prev {
-                left: calc(var(--spacing-xl) * -1.2);
-                /* Consistent with desktop positioning */
+                left: 0;
+                /* Positioned at wrapper padding edge */
             }
 
             .carousel-nav-next {
-                right: calc(var(--spacing-xl) * -1.2);
-                /* Consistent with desktop positioning */
+                right: 0;
+                /* Positioned at wrapper padding edge */
             }
 
             .nav-button {
@@ -882,57 +916,50 @@
             pointer-events: auto;
         }
 
-        /* Tablet Navigation Logic (768px - 1023px) - Simplified Approach */
+        /* Tablet Navigation Logic (768px - 1023px) - Unified with Desktop */
         @media (min-width: 768px) and (max-width: 1023px) {
-            .carousel-track {
-                display: flex;
-                overflow-x: auto;
-                scroll-snap-type: x mandatory;
-                scroll-behavior: smooth;
-                gap: var(--carousel-gap);
-                padding: 0 var(--spacing-sm);
-                scroll-padding-left: var(--spacing-sm);
-                /* Hide scrollbars while maintaining functionality */
-                scrollbar-width: none;
-                -ms-overflow-style: none;
+
+            /* Navigation Button State Management - same as desktop */
+            .carousel-nav {
+                opacity: 1;
+                pointer-events: auto;
+                transition: opacity var(--carousel-transition);
             }
 
-            .carousel-track::-webkit-scrollbar {
-                display: none;
+            /* Hide previous button when on first slide */
+            #proposals-slide-1:checked~.carousel-nav-prev {
+                opacity: 0.3;
+                pointer-events: none;
             }
 
-            .carousel-item {
-                flex: 1 1 0;
-                scroll-snap-align: start;
-                scroll-snap-stop: always;
-                min-width: 0;
-                width: auto;
+            /* Hide next button when on last slide */
+            #proposals-slide-2:checked~.carousel-nav-next {
+                opacity: 0.3;
+                pointer-events: none;
             }
 
-            /* Navigation control for tablet - scroll to specific positions */
-            #proposals-slide-1:checked~.carousel-track {
-                scroll-behavior: smooth;
+            /* Show all navigation when hovering over carousel */
+            .carousel-container:hover .carousel-nav {
+                opacity: 1;
+                pointer-events: auto;
             }
 
-            #proposals-slide-2:checked~.carousel-track {
-                scroll-behavior: smooth;
+            /* Handle edge cases for tablet */
+            .carousel-item:nth-child(3):last-child {
+                width: calc(25% - var(--carousel-gap) * 3 / 4);
+                margin-left: 0;
+                margin-right: auto;
             }
 
-            /* Ensure proper card alignment */
+            /* Ensure proper alignment for exactly 4 cards */
             .carousel-item:nth-child(1),
             .carousel-item:nth-child(2) {
-                /* First page: cards 1 and 2 */
+                /* First slide: cards 1 and 2 */
             }
 
             .carousel-item:nth-child(3),
             .carousel-item:nth-child(4) {
-                /* Second page: cards 3 and 4 */
-            }
-
-            re there are only 3 cards */ .carousel-item:nth-child(3):last-child {
-                width: calc(25% - var(--carousel-gap) * 3 / 4);
-                margin-left: 0;
-                margin-right: auto;
+                /* Second slide: cards 3 and 4 */
             }
         }
 
@@ -955,8 +982,8 @@
                 /* Accommodate all 4 cards in 2 slides */
                 display: flex;
                 flex-wrap: nowrap;
-                overflow: hidden;
-                /* Ensure smooth hardware acceleration */
+                overflow: visible;
+                /* Allow shadows and effects to be visible */
                 will-change: transform;
                 backface-visibility: hidden;
             }
@@ -981,20 +1008,20 @@
                 /* Ensure proper containment for 2-card layout */
                 position: relative;
                 width: 100%;
-                overflow: hidden;
-                /* Optimize rendering performance */
+                overflow: visible;
+                /* Allow shadows and effects to be visible */
                 contain: layout style paint;
             }
 
             /* Enhanced desktop navigation arrows positioning */
             .carousel-nav-prev {
-                left: calc(var(--spacing-lg) * -1);
-                /* Ensure arrows don't interfere with content */
+                left: 0;
+                /* Positioned at wrapper padding edge */
             }
 
             .carousel-nav-next {
-                right: calc(var(--spacing-lg) * -1);
-                /* Ensure arrows don't interfere with content */
+                right: 0;
+                /* Positioned at wrapper padding edge */
             }
 
             /* Desktop keyboard navigation support */
@@ -1336,23 +1363,7 @@
             /* Announce changes to screen readers */
         }
 
-        /* Skip Link for Carousel Navigation */
-        .carousel-skip-link {
-            position: absolute;
-            top: -40px;
-            left: 6px;
-            background: var(--color-acento-principal);
-            color: var(--color-texto);
-            padding: 8px;
-            text-decoration: none;
-            border-radius: var(--border-radius-sm);
-            z-index: 100;
-            transition: top var(--transition-fast);
-        }
 
-        .carousel-skip-link:focus {
-            top: 6px;
-        }
 
         /* Ensure proper tab order */
         .carousel-control[tabindex="-1"] {
@@ -1522,20 +1533,7 @@
             border-radius: var(--border-radius-md);
         }
 
-        /* Ensure skip link is properly styled */
-        .carousel-skip-link:focus {
-            position: absolute;
-            top: var(--spacing-sm);
-            left: var(--spacing-sm);
-            background: var(--color-acento-principal);
-            color: var(--color-texto);
-            padding: var(--spacing-sm);
-            text-decoration: none;
-            border-radius: var(--border-radius-sm);
-            z-index: 100;
-            font-weight: 600;
-            box-shadow: var(--shadow-md);
-        }
+
 
         /* Ensure instructions are properly styled when focused */
         .carousel-instructions:focus {
@@ -2270,6 +2268,189 @@
             }
         }
 
+        /* ========================================
+           JADE SECTION STYLES (Based on About)
+           ======================================== */
+
+        .jade-content {
+            position: relative;
+            z-index: 2;
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .jade-title {
+            position: relative;
+            font-family: var(--fuente-titulos);
+            font-size: 2rem;
+            font-weight: 600;
+            color: var(--color-texto);
+            margin-bottom: var(--spacing-lg);
+            padding-bottom: var(--spacing-sm);
+        }
+
+        .jade-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 3px;
+            background: linear-gradient(90deg, var(--color-acento-principal), var(--color-acento-secundario));
+            border-radius: 2px;
+        }
+
+        .jade-text {
+            max-width: 700px;
+            margin: 0 auto;
+            text-align: left;
+            line-height: 1.7;
+        }
+
+        .jade-text p {
+            margin-bottom: var(--spacing-lg);
+            font-size: 1rem;
+            color: var(--color-texto);
+            text-align: justify;
+        }
+
+        .jade-intro {
+            margin-bottom: var(--spacing-lg);
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: var(--color-texto);
+            text-align: justify;
+            padding: var(--spacing-md);
+            background: rgba(241, 196, 78, 0.05);
+            border-left: 4px solid var(--color-acento-principal);
+            border-radius: 0 var(--border-radius-sm) var(--border-radius-sm) 0;
+        }
+
+        /* Mobile Jade Styles */
+        @media (max-width: 767px) {
+            .jade-title {
+                font-size: 1.75rem;
+                margin-bottom: var(--spacing-md);
+                text-align: center;
+            }
+
+            .jade-title::after {
+                width: 40px;
+                height: 2px;
+            }
+
+            .jade-text {
+                text-align: left;
+            }
+
+            .jade-text p {
+                font-size: 0.95rem;
+                line-height: 1.6;
+                margin-bottom: var(--spacing-md);
+            }
+
+            .jade-intro {
+                font-size: 1rem;
+                margin-bottom: var(--spacing-md);
+                padding: var(--spacing-sm);
+            }
+        }
+
+        /* Tablet Jade Styles */
+        @media (min-width: 768px) and (max-width: 1023px) {
+            .jade-title {
+                font-size: 2.25rem;
+            }
+
+            .jade-text p {
+                font-size: 1.05rem;
+                line-height: 1.65;
+            }
+
+            .jade-intro {
+                font-size: 1.15rem;
+            }
+        }
+
+        /* Desktop Jade Styles */
+        @media (min-width: 1024px) {
+            .jade-title {
+                font-size: 2.5rem;
+                margin-bottom: var(--spacing-xl);
+            }
+
+            .jade-title::after {
+                width: 80px;
+                height: 4px;
+            }
+
+            .jade-text p {
+                font-size: 1.1rem;
+                line-height: 1.8;
+                margin-bottom: var(--spacing-lg);
+            }
+
+            .jade-intro {
+                font-size: 1.2rem;
+                margin-bottom: var(--spacing-xl);
+                font-weight: 500;
+            }
+        }
+
+        /* ========================================
+           CONTENT IMAGES SYSTEM
+           ======================================== */
+
+        /* Imagen vertical */
+        .content-image-vertical {
+            float: right;
+            width: 250px;
+            height: auto;
+            margin: 0 0 var(--spacing-md) var(--spacing-md);
+            border-radius: var(--border-radius-md);
+            box-shadow: var(--shadow-sm);
+        }
+
+        /* Imagen horizontal */
+        .content-image-horizontal {
+            display: block;
+            max-width: 600px;
+            width: 100%;
+            height: auto;
+            margin: var(--spacing-lg) auto;
+            border-radius: var(--border-radius-md);
+            box-shadow: var(--shadow-sm);
+        }
+
+        /* Imagen cuadrada */
+        .content-image-square {
+            float: right;
+            width: 200px;
+            height: auto;
+            margin: 0 0 var(--spacing-md) var(--spacing-md);
+            border-radius: var(--border-radius-md);
+            box-shadow: var(--shadow-sm);
+        }
+
+        /* Responsive para móviles */
+        @media (max-width: 767px) {
+
+            .content-image-vertical,
+            .content-image-square {
+                float: none;
+                display: block;
+                width: 200px;
+                margin: var(--spacing-md) auto;
+            }
+
+            .content-image-horizontal {
+                max-width: 100%;
+                margin: var(--spacing-md) auto;
+            }
+        }
+
         /* Proposals Section Styles */
         .proposals {
             background: linear-gradient(135deg, rgba(241, 196, 78, 0.05) 0%, rgba(212, 160, 23, 0.05) 100%);
@@ -2568,11 +2749,6 @@
                 transform: translate(-50%, -50%) scale(1.4);
                 box-shadow: 0 0 0 2px rgba(241, 196, 78, 0.3);
             }
-
-            min-height: var(--touch-target-min);
-            display: flex;
-            align-items: center;
-            justify-content: center;
         }
 
         .btn-proposals-main {
@@ -2582,7 +2758,7 @@
             width: 100%;
             max-width: 300px;
         }
-        }
+
 
         /* Tablet Proposals Styles */
         @media (min-width: 768px) and (max-width: 1023px) {
@@ -2595,7 +2771,7 @@
             .proposals-carousel .carousel-track {
                 display: flex;
                 flex-wrap: nowrap;
-                overflow: hidden;
+                overflow: visible;
                 width: 200%;
                 /* Show 4 cards in 2 slides of 2 cards each */
                 transition: transform var(--carousel-transition);
@@ -2658,11 +2834,11 @@
             }
 
             .proposals-carousel .carousel-nav-prev {
-                left: calc(var(--spacing-md) * -0.5);
+                left: 0;
             }
 
             .proposals-carousel .carousel-nav-next {
-                right: calc(var(--spacing-md) * -0.5);
+                right: 0;
             }
 
             /* Enhanced proposals carousel navigation on hover */
@@ -6101,11 +6277,12 @@
                 <div class="proposals-content">
                     <h2 class="proposals-title">Nuestras Propuestas</h2>
 
-                    <!-- Carousel Container for Proposals -->
-                    <div class="carousel-container proposals-carousel" role="region"
-                        aria-label="Carrusel de propuestas artísticas" aria-live="polite">
-                        <!-- Skip Link for Keyboard Users -->
-                        <a href="#proposals-end" class="carousel-skip-link">Saltar carrusel de propuestas</a>
+                    <!-- Carousel Wrapper for Proposals -->
+                    <div class="carousel-wrapper">
+                        <!-- Carousel Container for Proposals -->
+                        <div class="carousel-container proposals-carousel" role="region"
+                            aria-label="Carrusel de propuestas artísticas" aria-live="polite"></div>
+
 
                         <!-- Keyboard Navigation Instructions -->
                         <div class="carousel-instructions" tabindex="0" role="note"
@@ -6222,6 +6399,7 @@
                     <div id="proposals-end" class="sr-only">Final del carrusel de propuestas</div>
                 </div>
             </div>
+            </div>
         </section>
 
         <!-- Events Section -->
@@ -6290,6 +6468,35 @@
                     <div class="services-main-cta">
                         <a href="https://wa.me/34605933366?text=%C2%A1Hola,%20Claudia!%20Vi%20tu%20la%20web%20de%20La%20Colmena%20y%20me%20gustar%C3%ADa%20saber%20m%C3%A1s"
                             class="btn-services-main">Contacta y Cuéntanos tu Proyecto</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Senda del Jade Section -->
+        <section id="senda-del-jade" class="jade">
+            <div class="container">
+                <div class="jade-content">
+                    <h2 class="jade-title">La Senda del Jade – Colaboradores de La Colmena</h2>
+                    <div class="jade-text">
+                        <p>En La Senda del Jade, el movimiento se convierte en un camino hacia el equilibrio. A través
+                            del tai chi, el chi kung, la meditación y otras prácticas de tradición oriental, esta
+                            escuela de artes de la vida invita a habitar el cuerpo con conciencia, a escuchar la
+                            respiración y a reconectar con la naturaleza como fuente de bienestar.</p>
+
+                        <p>Como parte de la red de socios colaboradores de La Colmena, La Senda del Jade comparte su
+                            mirada holística, tejiendo un puente entre el cuidado interior y la creación artística. Su
+                            presencia enriquece las residencias y procesos de La Colmena, ofreciendo herramientas que
+                            ayudan a los artistas a cultivar la presencia escénica, la calma y la energía vital que
+                            atraviesa toda obra.
+                            <img src="assets/senda-jade.webp" class="content-image-vertical"
+                                alt="La Senda del Jade - Prácticas de bienestar y artes orientales">
+                        </p>
+
+                        <p class="jade-intro">Juntas, La Senda del Jade y La Colmena crean un espacio donde el arte y el
+                            bienestar se abrazan. Un lugar en el que la práctica escénica se nutre de la escucha
+                            profunda y el cuidado, y donde la vida y el arte se entienden como un mismo viaje hacia lo
+                            esencial.</p>
                     </div>
                 </div>
             </div>
