@@ -149,26 +149,13 @@
             }
         }
 
-        /* Desktop Configuration */
-        @media (min-width: 1024px) {
-            :root {
-                --carousel-items-visible: 2;
-                --carousel-item-width: var(--carousel-item-width-desktop);
-                --carousel-nav-display: block;
-
-                /* Desktop-specific enhancements */
-                --carousel-nav-size: 52px;
-                --carousel-indicator-size: 16px;
-                --carousel-gap: var(--spacing-lg);
-            }
-        }
+        /* Desktop Configuration - Removed duplicate, keeping unified config */
 
         /* Large Desktop Configuration (≥1440px) */
         @media (min-width: 1440px) {
             :root {
                 --carousel-nav-size: 56px;
                 --carousel-indicator-size: 18px;
-                --carousel-gap: 0.5rem;
                 --carousel-padding: 1.5rem;
             }
         }
@@ -344,7 +331,7 @@
         .carousel-container {
             position: relative;
             width: 100%;
-            overflow: visible;
+            overflow: hidden;
         }
 
         /* Carousel Track Component */
@@ -607,7 +594,7 @@
             .carousel-container {
                 position: relative;
                 width: 100%;
-                overflow: visible;
+                overflow: hidden;
                 contain: layout style paint;
             }
 
@@ -1008,8 +995,7 @@
                 /* Ensure proper containment for 2-card layout */
                 position: relative;
                 width: 100%;
-                overflow: visible;
-                /* Allow shadows and effects to be visible */
+                overflow: hidden;
                 contain: layout style paint;
             }
 
@@ -2455,6 +2441,7 @@
         .proposals {
             background: linear-gradient(135deg, rgba(241, 196, 78, 0.05) 0%, rgba(212, 160, 23, 0.05) 100%);
             position: relative;
+            overflow-x: hidden;
         }
 
         .proposals::before {
